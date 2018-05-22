@@ -100,7 +100,7 @@ export class MethodStubVerificator<T> {
             const expired = Date.now() + ms;
 
             const check = () => {
-                const allMatchingActions = this.methodToVerify.mocker.getAllMatchingActions(this.methodToVerify.name, this.methodToVerify.matchers);
+                const allMatchingActions = this.methodToVerify.mocker.getAllMatchingActions(this.methodToVerify.methodName, this.methodToVerify.matchers);
 
                 if (allMatchingActions.length > 0) {
                     resolve();
