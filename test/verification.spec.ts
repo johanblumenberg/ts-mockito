@@ -827,6 +827,24 @@ describe("verifying mocked object", () => {
             verify(mockedFoo.getBar()).once();
         });
     });
+
+    describe("matcher error messages", () => {
+        it("should describe expected method call", () => {
+            //given
+            instance(mockedFoo).getStringById(2);
+
+            try {
+                // when
+                verify(mockedFoo.getStringById(1)).once();
+
+                expect(true).toBe(false); // Above call should throw an exception
+            } catch (e) {
+                // then
+                expect(e.message).toMatch(/getStringById\(strictEqual\(1\)\)/);
+                expect(e.message).toMatch(/getStringById\(2\)/);
+            }
+        });
+    });
 });
 
 function verifyCallCountErrorMessage(error, expectedCallCount, receivedCallCount): void {

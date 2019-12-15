@@ -7,6 +7,11 @@ const localSetTimeout = setTimeout;
 export class MethodStubVerificator<T> {
     private methodCallToStringConverter: MethodCallToStringConverter = new MethodCallToStringConverter();
 
+    private actualCalls() {
+        const calls = this.methodToVerify.mocker.getActionsByName(this.methodToVerify.methodName);
+        return 'Actual calls:\n  ' + this.methodCallToStringConverter.convertActualCalls(calls).join('\n  ');
+    }
+
     constructor(private methodToVerify: MethodToStub) {
         methodToVerify.watcher.invoked();
     }
@@ -34,8 +39,9 @@ export class MethodStubVerificator<T> {
     public times(value: number): void {
         const allMatchingActions = this.methodToVerify.mocker.getAllMatchingActions(this.methodToVerify.methodName, this.methodToVerify.matchers);
         if (value !== allMatchingActions.length) {
-            const methodToVerifyAsString = this.methodCallToStringConverter.convert(this.methodToVerify);
-            throw new Error(`Expected "${methodToVerifyAsString}to be called ${value} time(s). But has been called ${allMatchingActions.length} time(s).`);
+            const methodToVerifyAsString = this.methodCallToStringConverter.convert(this.methodToVerify);            
+            const msg = `Expected "${methodToVerifyAsString}to be called ${value} time(s). But has been called ${allMatchingActions.length} time(s).`;
+            throw new Error(msg + '\n' + this.actualCalls());
         }
     }
 
@@ -43,7 +49,8 @@ export class MethodStubVerificator<T> {
         const allMatchingActions = this.methodToVerify.mocker.getAllMatchingActions(this.methodToVerify.methodName, this.methodToVerify.matchers);
         if (value > allMatchingActions.length) {
             const methodToVerifyAsString = this.methodCallToStringConverter.convert(this.methodToVerify);
-            throw new Error(`Expected "${methodToVerifyAsString}to be called at least ${value} time(s). But has been called ${allMatchingActions.length} time(s).`);
+            const msg = `Expected "${methodToVerifyAsString}to be called at least ${value} time(s). But has been called ${allMatchingActions.length} time(s).`;
+            throw new Error(msg + '\n' + this.actualCalls());
         }
     }
 
@@ -51,7 +58,8 @@ export class MethodStubVerificator<T> {
         const allMatchingActions = this.methodToVerify.mocker.getAllMatchingActions(this.methodToVerify.methodName, this.methodToVerify.matchers);
         if (value < allMatchingActions.length) {
             const methodToVerifyAsString = this.methodCallToStringConverter.convert(this.methodToVerify);
-            throw new Error(`Expected "${methodToVerifyAsString}to be called at least ${value} time(s). But has been called ${allMatchingActions.length} time(s).`);
+            const msg = `Expected "${methodToVerifyAsString}to be called at most ${value} time(s). But has been called ${allMatchingActions.length} time(s).`;
+            throw new Error(msg + '\n' + this.actualCalls());
         }
     }
 
