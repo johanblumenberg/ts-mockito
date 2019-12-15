@@ -259,6 +259,7 @@ describe("mocking", () => {
                 let called = false;
                 when(mockedFoo.convertNumberToString(sampleValue)).thenCall(() => {
                     called = true;
+                    return "";
                 });
 
                 // when
@@ -277,6 +278,7 @@ describe("mocking", () => {
                     let called = false;
                     when(mockedFoo.convertNumberToString(sampleValue)).thenCall(() => {
                         called = true;
+                        return "";
                     });
 
                     // when

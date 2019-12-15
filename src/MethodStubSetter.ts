@@ -28,7 +28,7 @@ export class MethodStubSetter<T, ResolveType = void, RejectType = void> {
         return this;
     }
 
-    public thenCall(func: (...args: any[]) => any): this {
+    public thenCall(func: (...args: any[]) => T): this {
         this.methodToStub.methodStubCollection.add(new CallFunctionMethodStub(this.groupIndex, this.methodToStub.matchers, func));
         return this;
     }
