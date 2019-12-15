@@ -111,7 +111,7 @@ export function anyOfClass<T>(expectedClass: new (...args: any[]) => T): any {
     return new AnyOfClassMatcher(expectedClass) as any;
 }
 
-export function anyFunction(): any {
+export function anyFunction<T>(): () => T {
     return new AnyFunctionMatcher() as any;
 }
 
