@@ -17,6 +17,11 @@ import {AnyOfClassMatcher} from "./matcher/type/AnyOfClassMatcher";
 import {AnyStringMatcher} from "./matcher/type/AnyStringMatcher";
 import {AnythingMatcher} from "./matcher/type/AnythingMatcher";
 import {BetweenMatcher} from "./matcher/type/BetweenMatcher";
+import {MaybeDate} from "./matcher/type/date/DateMatcher";
+import {IsAfterMatcher} from "./matcher/type/date/IsAfterMatcher";
+import {IsAfterOrEqualMatcher} from "./matcher/type/date/IsAfterOrEqualMatcher";
+import {IsBeforeMatcher} from "./matcher/type/date/IsBeforeMatcher";
+import {IsBeforeOrEqualMatcher} from "./matcher/type/date/IsBeforeOrEqualMatcher";
 import {DeepEqualMatcher} from "./matcher/type/DeepEqualMatcher";
 import {EndsWithMatcher} from "./matcher/type/EndsWithMatcher";
 import {MatchingStringMatcher} from "./matcher/type/MatchingStringMatcher";
@@ -197,6 +202,22 @@ export function nextTick(): Promise<void> {
     return new Promise(resolve => originalSetTimeout(() => originalSetImmediate(resolve), 0));
 }
 
+export function isAfter(date: MaybeDate): Date {
+    return new IsAfterMatcher(date) as any;
+}
+
+export function isAfterOrEqual(date: MaybeDate): Date {
+    return new IsAfterOrEqualMatcher(date) as any;
+}
+
+export function isBefore(date: MaybeDate): Date {
+    return new IsBeforeMatcher(date) as any;
+}
+
+export function isBeforeOrEqual(date: MaybeDate): Date {
+    return new IsBeforeOrEqualMatcher(date) as any;
+}
+
 // Export default object with all members (ember-browserify doesn't support named exports).
 export default {
     spy,
@@ -226,4 +247,8 @@ export default {
     MockPropertyPolicy,
     defer,
     nextTick,
+    isAfter,
+    isAfterOrEqual,
+    isBefore,
+    isBeforeOrEqual,
 };
