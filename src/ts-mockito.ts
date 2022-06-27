@@ -26,6 +26,10 @@ import {DeepEqualMatcher} from "./matcher/type/DeepEqualMatcher";
 import {EndsWithMatcher} from "./matcher/type/EndsWithMatcher";
 import {MatchingStringMatcher} from "./matcher/type/MatchingStringMatcher";
 import {NotNullMatcher} from "./matcher/type/NotNullMatcher";
+import {GreaterThanMatcher} from "./matcher/type/number/GreaterThanMatcher";
+import {GreaterThanOrEqualMatcher} from "./matcher/type/number/GreaterThanOrEqualMatcher";
+import {LowerThanMatcher} from "./matcher/type/number/LowerThanMatcher";
+import {LowerThanOrEqualMatcher} from "./matcher/type/number/LowerThanOrEqualMatcher";
 import {ObjectContainingMatcher} from "./matcher/type/ObjectContainingMatcher";
 import {StartsWithMatcher} from "./matcher/type/StartsWithMatcher";
 import {StrictEqualMatcher} from "./matcher/type/StrictEqualMatcher";
@@ -218,6 +222,22 @@ export function isBeforeOrEqual(date: MaybeDate): Date {
     return new IsBeforeOrEqualMatcher(date) as any;
 }
 
+export function greaterThan(value: number): number {
+    return new GreaterThanMatcher(value) as any;
+}
+
+export function greaterThanOrEqual(value: number): number {
+    return new GreaterThanOrEqualMatcher(value) as any;
+}
+
+export function lowerThan(value: number): number {
+    return new LowerThanMatcher(value) as any;
+}
+
+export function lowerThanOrEqual(value: number): number {
+    return new LowerThanOrEqualMatcher(value) as any;
+}
+
 // Export default object with all members (ember-browserify doesn't support named exports).
 export default {
     spy,
@@ -251,4 +271,8 @@ export default {
     isAfterOrEqual,
     isBefore,
     isBeforeOrEqual,
+    greaterThan,
+    greaterThanOrEqual,
+    lowerThan,
+    lowerThanOrEqual,
 };
