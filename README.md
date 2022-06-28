@@ -453,3 +453,4 @@ console.log(capture(spiedFoo.bar).last()); // [42]
 * Markus Ende (https://github.com/Markus-Ende)
 * Thomas Hilzendegen (https://github.com/thomashilzendegen)
 * Johan Blumenberg (https://github.com/johanblumenberg)
+* Lorens León (https://github.com/leon19)
