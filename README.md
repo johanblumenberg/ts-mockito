@@ -15,6 +15,8 @@ Fork of [ts-mockito](https://github.com/NagRock/ts-mockito), which will be kept 
  - Make `.thenResolve()` work for `PromiseLike<T>`
  - [Make spying on an object prototype work](https://github.com/johanblumenberg/ts-mockito/commit/5171b536ba52d3e5d34479965fb95880bff0df4b)
  - Type safe `objectContaining()`
+ - [Date matchers](https://github.com/johanblumenberg/ts-mockito/commit/15d35ac7490469d529ccc3665bf09606660c918d)
+ - [Numberic matchers](https://github.com/johanblumenberg/ts-mockito/commit/32f4f7acab81be7912f676b8cfc8efca26a06937)
 
 ## Installation
 
