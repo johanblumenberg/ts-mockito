@@ -9,7 +9,6 @@ import {strictEqual} from "./ts-mockito";
 import {MockableFunctionsFinder} from "./utils/MockableFunctionsFinder";
 import {ObjectInspector} from "./utils/ObjectInspector";
 import {ObjectPropertyCodeRetriever} from "./utils/ObjectPropertyCodeRetriever";
-import { TODO } from "./utils/types";
 
 export class Mocker {
     public mock: any = {};
@@ -29,68 +28,24 @@ export class Mocker {
             this.processClassCode(this.clazz);
             this.processFunctionsCode((this.clazz as any).prototype);
         }
-        if (typeof Proxy !== "undefined" && this.clazz) {
-            this.mock.__tsmockitoInstance = new Proxy(this.instance, this.createCatchAllHandlerForRemainingPropertiesWithoutGetters());
-        } else if (typeof Proxy !== "undefined" && !this.clazz) {
-            this.instance = new Proxy(this.instance, {
-                get: (target: any, name: PropertyKey) => {
-                    if (this.excludedPropertyNames.indexOf(name.toString()) >= 0) {
-                        return target[name];
-                    }
 
-                    const hasMethodStub = name in target;
-
-                    if (!hasMethodStub) {
-                        if (this.defaultedPropertyNames.indexOf(name.toString()) >= 0) {
-                            return undefined;
-                        }
-                        return this.createActionListener(name.toString());
-                    }
-                    return target[name];
-                },
-            });
-            this.mock.__tsmockitoInstance = this.instance;
+        if (typeof Proxy !== "undefined") {
+          this.mock.__tsmockitoInstance = new Proxy(
+              this.instance,
+              this.createCatchAllHandlerForRemainingPropertiesWithoutGetters(),
+          );
         }
     }
 
     public getMock(): any {
         if (typeof Proxy === "undefined") {
             return this.mock;
+        } else {
+            return new Proxy(
+              this.mock,
+              this.createCatchAllHandlerForRemainingPropertiesWithoutGetters(),
+            );
         }
-        if (typeof Proxy !== "undefined" && this.clazz) {
-            return new Proxy(this.mock, this.createCatchAllHandlerForRemainingPropertiesWithoutGetters());
-        }
-        return new Proxy(this.mock, {
-            get: (target: any, name: PropertyKey) => {
-                const hasProp = name in target;
-                if (hasProp) {
-                    return target[name];
-                }
-
-                const hasMethodStub = name in target;
-                if (!hasMethodStub) {
-                    this.createMethodStub(name.toString());
-                    this.createInstanceActionListener(name.toString(), {});
-                }
-                return this.mock[name.toString()];
-            },
-        });
-    }
-
-    public createCatchAllHandlerForRemainingPropertiesWithoutGetters(): any {
-        return {
-            get: (target: any, name: PropertyKey) => {
-                const hasMethodStub = name in target;
-                if (!hasMethodStub) {
-                    if (this.defaultedPropertyNames.indexOf(name.toString()) >= 0) {
-                        return undefined;
-                    }
-                    this.createPropertyStub(name.toString());
-                    this.createInstancePropertyDescriptorListener(name.toString(), {}, this.clazz.prototype);
-                }
-                return target[name];
-            },
-        };
     }
 
     public reset(): void {
@@ -174,6 +129,30 @@ export class Mocker {
 
     protected getEmptyMethodStub(key: string, args: any[]): MethodStub {
         return new ReturnValueMethodStub(-1, [], null);
+    }
+
+    private createCatchAllHandlerForRemainingPropertiesWithoutGetters(): any {
+        return {
+            get: (target: any, name: PropertyKey) => {
+                if (!(name in target)) {
+                    if (this.defaultedPropertyNames.indexOf(name.toString()) >= 0) {
+                        return undefined;
+                    }
+                    if (this.clazz) {
+                      // If mocking a class, class method are populated in the constructor
+                      // Assume that all other properties are not methods
+                      this.createPropertyStub(name.toString());
+                      this.createInstancePropertyDescriptorListener(name.toString(), {}, this.clazz.prototype);
+                    } else {
+                      // If mocking an interface, no class methods are populated in the constructor
+                      // Assume that all properties are methods
+                      this.createMethodStub(name);
+                      this.createInstanceActionListener(name.toString(), target);
+                    }
+                }
+                return target[name];
+            },
+        };
     }
 
     private processClassCode(clazz: any): void {
