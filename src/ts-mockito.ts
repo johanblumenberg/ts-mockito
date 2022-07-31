@@ -25,7 +25,7 @@ import {StrictEqualMatcher} from "./matcher/type/StrictEqualMatcher";
 import {MethodStubSetter} from "./MethodStubSetter";
 import {MethodStubVerificator} from "./MethodStubVerificator";
 import {MethodToStub} from "./MethodToStub";
-import {Mocker} from "./Mock";
+import {Mock} from "./Mock";
 import {Spy} from "./Spy";
 
 export function spy<T>(instanceToSpy: T): T {
@@ -35,7 +35,7 @@ export function spy<T>(instanceToSpy: T): T {
 export function mock<T>(clazz: (new(...args: any[]) => T) | (Function & { prototype: T }) ): T;
 export function mock<T>(clazz?: any): T;
 export function mock<T>(clazz?: any): T {
-    return new Mocker(clazz).getMock();
+    return new Mock(clazz).getMock();
 }
 
 export function verify<T>(method: T): MethodStubVerificator<T> {

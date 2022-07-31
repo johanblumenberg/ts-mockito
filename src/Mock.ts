@@ -15,19 +15,12 @@ export class Mocker {
     protected objectInspector = new ObjectInspector();
     private methodStubCollections: any = {};
     private methodActions: MethodAction[] = [];
-    private mockableFunctionsFinder = new MockableFunctionsFinder();
-    private objectPropertyCodeRetriever = new ObjectPropertyCodeRetriever();
     private excludedPropertyNames: string[] = ["hasOwnProperty"];
     private defaultedPropertyNames: string[] = ["Symbol(Symbol.toPrimitive)", "then", "catch"];
 
     constructor(private clazz: any, public instance: any = {}) {
         this.mock.__tsmockitoInstance = this.instance;
         this.mock.__tsmockitoMocker = this;
-        if (_.isObject(this.clazz) && _.isObject(this.instance)) {
-            this.processProperties((this.clazz as any).prototype);
-            this.processClassCode(this.clazz);
-            this.processFunctionsCode((this.clazz as any).prototype);
-        }
 
         if (typeof Proxy !== "undefined") {
           this.mock.__tsmockitoInstance = new Proxy(
@@ -131,6 +124,14 @@ export class Mocker {
         return new ReturnValueMethodStub(-1, [], null);
     }
 
+    protected createMethodStub(key) {
+        if (this.mock.hasOwnProperty(key)) {
+            return;
+        }
+
+        this.mock[key] = this.createMethodToStub(key);
+    }
+
     private createCatchAllHandlerForRemainingPropertiesWithoutGetters(): any {
         return {
             get: (target: any, name: PropertyKey) => {
@@ -171,27 +172,6 @@ export class Mocker {
         };
     }
 
-    private processClassCode(clazz: any): void {
-        const classCode = typeof clazz.toString !== "undefined" ? clazz.toString() : "";
-        const functionNames = this.mockableFunctionsFinder.find(classCode);
-        functionNames.forEach((functionName: string) => {
-            this.createMethodStub(functionName);
-            this.createInstanceActionListener(functionName, this.clazz.prototype);
-        });
-    }
-
-    private processFunctionsCode(object: any): void {
-        this.objectInspector.getObjectPrototypes(object).forEach((obj: any) => {
-            this.objectInspector.getObjectOwnPropertyNames(obj).forEach((propertyName: string) => {
-                const functionNames = this.mockableFunctionsFinder.find(this.objectPropertyCodeRetriever.get(obj, propertyName));
-                functionNames.forEach((functionName: string) => {
-                    this.createMethodStub(functionName);
-                    this.createInstanceActionListener(functionName, this.clazz.prototype);
-                });
-            });
-        });
-    }
-
     private createPropertyStub(key: string): void {
         if (this.mock.hasOwnProperty(key)) {
             return;
@@ -200,14 +180,6 @@ export class Mocker {
         Object.defineProperty(this.mock, key, {
             get: this.createMethodToStub(key),
         });
-    }
-
-    private createMethodStub(key) {
-        if (this.mock.hasOwnProperty(key)) {
-            return;
-        }
-
-        this.mock[key] = this.createMethodToStub(key);
     }
 
     private createMethodToStub(key: string): () => any {
@@ -245,4 +217,40 @@ export class Mocker {
             return this.getEmptyMethodStub(key, args);
         }
     }
+}
+
+export class Mock extends Mocker {
+  private mockableFunctionsFinder = new MockableFunctionsFinder();
+  private objectPropertyCodeRetriever = new ObjectPropertyCodeRetriever();
+
+  constructor(clazz: any) {
+    super(clazz);
+
+    if (_.isObject(clazz)) {
+        this.processProperties((clazz as any).prototype);
+        this.processClassCode(clazz);
+        this.processFunctionsCode((clazz as any).prototype);
+    }
+  }
+
+  private processClassCode(clazz: any): void {
+    const classCode = typeof clazz.toString !== "undefined" ? clazz.toString() : "";
+    const functionNames = this.mockableFunctionsFinder.find(classCode);
+    functionNames.forEach((functionName: string) => {
+        this.createMethodStub(functionName);
+        this.createInstanceActionListener(functionName, clazz.prototype);
+    });
+  }
+
+  private processFunctionsCode(object: any): void {
+      this.objectInspector.getObjectPrototypes(object).forEach((obj: any) => {
+          this.objectInspector.getObjectOwnPropertyNames(obj).forEach((propertyName: string) => {
+              const functionNames = this.mockableFunctionsFinder.find(this.objectPropertyCodeRetriever.get(obj, propertyName));
+              functionNames.forEach((functionName: string) => {
+                  this.createMethodStub(functionName);
+                  this.createInstanceActionListener(functionName, object);
+              });
+          });
+      });
+  }
 }
