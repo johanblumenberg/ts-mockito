@@ -43,7 +43,7 @@ export class Mocker {
         } else {
             return new Proxy(
               this.mock,
-              this.createCatchAllHandlerForRemainingPropertiesWithoutGetters(),
+              this.createCatchAllHandlerForMock(),
             );
         }
     }
@@ -134,6 +134,10 @@ export class Mocker {
     private createCatchAllHandlerForRemainingPropertiesWithoutGetters(): any {
         return {
             get: (target: any, name: PropertyKey) => {
+                if (this.excludedPropertyNames.indexOf(name.toString()) >= 0) {
+                    return target[name];
+                }
+
                 if (!(name in target)) {
                     if (this.defaultedPropertyNames.indexOf(name.toString()) >= 0) {
                         return undefined;
@@ -149,6 +153,18 @@ export class Mocker {
                       this.createMethodStub(name);
                       this.createInstanceActionListener(name.toString(), target);
                     }
+                }
+                return target[name];
+            },
+        };
+    }
+
+    private createCatchAllHandlerForMock(): any {
+        return {
+            get: (target: any, name: PropertyKey) => {
+                if (!(name in target)) {
+                    this.createMethodStub(name);
+                    this.createInstanceActionListener(name.toString(), target);
                 }
                 return target[name];
             },
