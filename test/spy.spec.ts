@@ -2,21 +2,9 @@ import {capture, reset, spy, verify, when} from "../src/ts-mockito";
 
 describe("spying on a real object", () => {
     class Real {
-        public dynamicMethod: Function;
-        public dynamicMethodInFunction: Function;
         public b = 11;
-
-        constructor() {
-            this.dynamicMethod = () => "dynamicMethod";
-        }
-
         get baz() {
             return 3;
-        }
-
-        public getBar(): string {
-            this.dynamicMethodInFunction = () => "dynamicMethodInFunction";
-            return "bar";
         }
         public foo(a: number) {
             return a;
@@ -67,10 +55,6 @@ describe("spying on a real object", () => {
 
             // then
             expect(foo.bar()).toBe(2);
-            expect(foo.getBar()).toBe("bar");
-            expect(foo.dynamicMethod()).toBe("dynamicMethod");
-            expect(foo.dynamicMethodInFunction()).toBe("dynamicMethodInFunction");
-
         });
     });
 

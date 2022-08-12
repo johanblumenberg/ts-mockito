@@ -9,6 +9,7 @@ import {strictEqual} from "./ts-mockito";
 import {MockableFunctionsFinder} from "./utils/MockableFunctionsFinder";
 import {ObjectInspector} from "./utils/ObjectInspector";
 import {ObjectPropertyCodeRetriever} from "./utils/ObjectPropertyCodeRetriever";
+import { TODO } from "./utils/types";
 
 export class Mocker {
     public mock: any = {};
@@ -20,15 +21,13 @@ export class Mocker {
     private excludedPropertyNames: string[] = ["hasOwnProperty"];
     private defaultedPropertyNames: string[] = ["Symbol(Symbol.toPrimitive)", "then", "catch"];
 
-    constructor(private clazz: any, public instance: any = {}, isSpy: boolean = false) {
+    constructor(private clazz: any, public instance: any = {}) {
         this.mock.__tsmockitoInstance = this.instance;
         this.mock.__tsmockitoMocker = this;
         if (_.isObject(this.clazz) && _.isObject(this.instance)) {
             this.processProperties((this.clazz as any).prototype);
-            if (!isSpy || typeof Proxy === "undefined") {
-                this.processClassCode(this.clazz);
-                this.processFunctionsCode((this.clazz as any).prototype);
-            }
+            this.processClassCode(this.clazz);
+            this.processFunctionsCode((this.clazz as any).prototype);
         }
         if (typeof Proxy !== "undefined" && this.clazz) {
             this.mock.__tsmockitoInstance = new Proxy(this.instance, this.createCatchAllHandlerForRemainingPropertiesWithoutGetters());
