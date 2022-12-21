@@ -80,6 +80,26 @@ if (typeof Proxy !== "undefined") {
                 verify(new ctor()).called();
                 expect(result).toBe(instance(mockClass));
             });
+
+            it("should mock with empty return values", () => {
+                const fn: () => number = fnmock();
+
+                when(fn()).thenReturn(1).thenReturn();
+
+                expect(instance(fn)()).toEqual(1);
+                expect(instance(fn)()).toEqual(undefined);
+                verify(fn()).called();
+            });
+
+            it("should mock with empty throw values", () => {
+                const fn: () => number = fnmock();
+
+                when(fn()).thenReturn(1).thenThrow();
+
+                expect(instance(fn)()).toEqual(1);
+                expect(() => instance(fn)()).toThrow(undefined)
+                verify(fn()).called();
+            });
         });
     });
 }

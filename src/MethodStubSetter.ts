@@ -26,6 +26,10 @@ export class MethodStubSetter<T, ResolveType> implements AsyncMethodStubSetter<T
     }
 
     public thenReturn(...rest: T[]): this {
+        // Returns undefined if no return values are given.
+        if (rest.length === 0) {
+            rest.push(undefined);
+        }
         rest.forEach(value => {
             this.methodToStub.methodStubCollection.add(new ReturnValueMethodStub(this.groupIndex, this.methodToStub.matchers, value));
         });
@@ -33,6 +37,10 @@ export class MethodStubSetter<T, ResolveType> implements AsyncMethodStubSetter<T
     }
 
     public thenThrow(...rest: Error[]): this {
+        // Throws undefined if no throw values are given.
+        if (rest.length === 0) {
+            rest.push(undefined);
+        }
         rest.forEach(error => {
             this.methodToStub.methodStubCollection.add(new ThrowErrorMethodStub(this.groupIndex, this.methodToStub.matchers, error));
         });
@@ -56,6 +64,10 @@ export class MethodStubSetter<T, ResolveType> implements AsyncMethodStubSetter<T
     }
 
     public thenReject(...rest: any[]): this {
+        // Rejects undefined if no reject values are given.
+        if (rest.length === 0) {
+            rest.push(undefined);
+        }
         rest.forEach(value => {
             this.methodToStub.methodStubCollection.add(new RejectPromiseMethodStub(this.groupIndex, this.methodToStub.matchers, value));
         });

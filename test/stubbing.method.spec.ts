@@ -229,6 +229,19 @@ describe("mocking", () => {
                     .catch(err => done.fail(err));
             });
 
+            it("rejects void promise without arguments", done => {
+                when(mockedFoo.sampleMethodReturningVoidPromise("abc")).thenReject();
+
+                foo.sampleMethodReturningVoidPromise("abc")
+                    .then(() => {
+                        done.fail();
+                    })
+                    .catch(err => {
+                        expect(err).toEqual(undefined);
+                        done();
+                    });
+            });
+
             if (typeof Proxy !== "undefined") {
                 it("resolves with given mock value", done => {
                     // given
