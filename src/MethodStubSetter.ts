@@ -6,17 +6,30 @@ import {ReturnValueMethodStub} from "./stub/ReturnValueMethodStub";
 import {ThrowErrorMethodStub} from "./stub/ThrowErrorMethodStub";
 
 export interface SyncMethodStubSetter<T> {
-    thenReturn(...rest: T[]): this;
-    thenThrow(...rest: Error[]): this;
+    thenReturn(head: T, ...tail: T[]): this;
+    thenThrow(head: Error, ...tail: Error[]): this;
     thenCall(func: (...args: any[]) => T): this;
 }
 
-export interface AsyncMethodStubSetter<T, ResolveType> extends SyncMethodStubSetter<T> {
-    thenResolve(...rest: ResolveType[]): this;
-    thenReject(...rest: any[]): this;
+export interface VoidSyncMethodStubSetter<T> {
+  thenReturn(head: T, ...tail: T[]): this;
+  thenReturn(): this;
+  thenThrow(head: Error, ...tail: Error[]): this;
+  thenCall(func: (...args: any[]) => T): this;
 }
 
-export class MethodStubSetter<T, ResolveType> implements AsyncMethodStubSetter<T, ResolveType> {
+export interface AsyncMethodStubSetter<T, ResolveType> extends SyncMethodStubSetter<T> {
+    thenResolve(head: ResolveType, ...tail: ResolveType[]): this;
+    thenReject(head: any, ...tail: any[]): this;
+}
+
+export interface VoidAsyncMethodStubSetter<T, ResolveType> extends VoidSyncMethodStubSetter<T> {
+  thenResolve(head: ResolveType, ...tail: ResolveType[]): this;
+  thenResolve(): this;
+  thenReject(head: any, ...tail: any[]): this;
+}
+
+export class MethodStubSetter<T, ResolveType> implements AsyncMethodStubSetter<T, ResolveType>, VoidAsyncMethodStubSetter<T, ResolveType> {
     private static globalGroupIndex: number = 0;
     private groupIndex: number;
 
@@ -26,6 +39,10 @@ export class MethodStubSetter<T, ResolveType> implements AsyncMethodStubSetter<T
     }
 
     public thenReturn(...rest: T[]): this {
+        // Returns undefined if no return values are given.
+        if (rest.length === 0) {
+          rest.push(undefined);
+        }
         rest.forEach(value => {
             this.methodToStub.methodStubCollection.add(new ReturnValueMethodStub(this.groupIndex, this.methodToStub.matchers, value));
         });

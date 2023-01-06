@@ -229,6 +229,11 @@ describe("mocking", () => {
                     .catch(err => done.fail(err));
             });
 
+            // Should not compile
+            // it("should not allow thenResolve without arguments if the return type is not Promise<void>", done => {
+            //     when(mockedFoo.sampleMethodReturningPromise("abc")).thenResolve();
+            // });
+            
             if (typeof Proxy !== "undefined") {
                 it("resolves with given mock value", done => {
                     // given
@@ -279,6 +284,68 @@ describe("mocking", () => {
                         done();
                     });
             });
+
+            it("rejects with given value for PromiseLike", done => {
+                // given
+                const sampleValue = "abc";
+                const sampleError = new Error("sampleError");
+                when(mockedFoo.sampleMethodReturningPromiseLike(sampleValue)).thenReject(sampleError);
+
+                // when
+                (foo.sampleMethodReturningPromiseLike(sampleValue) as Promise<string>)
+                    .then(value => done.fail("promise was not rejected"))
+                    .catch(err => {
+                        // then
+                        expect(err.message).toEqual("sampleError");
+                        done();
+                    });
+            });
+
+            it("rejects with multiple values", done => {
+                const sampleError1 = new Error("one");
+                const sampleError2 = new Error("two");
+                const sampleError3 = new Error("three");
+                when(mockedFoo.sampleMethodReturningPromise("abc")).thenReject(sampleError1, sampleError2, sampleError3);
+
+                foo.sampleMethodReturningPromise("abc")
+                    .then(value => done.fail("promise was not rejected"))
+                    .catch(err => {
+                        expect(err.message).toEqual("one");
+                        return foo.sampleMethodReturningPromise("abc");
+                    })
+                    .then(value => done.fail("promise was not rejected"))
+                    .catch(err => {
+                        expect(err.message).toEqual("two");
+                        return foo.sampleMethodReturningPromise("abc");
+                    })
+                    .then(value => done.fail("promise was not rejected"))
+                    .catch(err => {
+                        expect(err.message).toEqual("three");
+                        done();
+                    })
+            });
+
+            it("rejects void promise", done => {
+                const sampleError = new Error("sampleError");
+                when(mockedFoo.sampleMethodReturningVoidPromise("abc")).thenReject(sampleError);
+
+                foo.sampleMethodReturningVoidPromise("abc")
+                    .then(value => done.fail("promise was not rejected"))
+                    .catch(err => {
+                        expect(err.message).toEqual("sampleError");
+                        done();
+                    });
+            });
+
+            // Should not compile
+            // it("should not allow thenReject without arguments if the return type is Promise<void>", done => {
+            //     when(mockedFoo.sampleMethodReturningVoidPromise("abc")).thenReject();
+            // });
+
+            // Should not compile
+            // it("should not allow thenReject without arguments if the return type is not Promise<void>", done => {
+            //     when(mockedFoo.sampleMethodReturningPromise("abc")).thenReject();
+            /// });
         });
 
         describe("with stubbed function call", () => {
