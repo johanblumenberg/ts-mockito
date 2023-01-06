@@ -11,6 +11,9 @@ export class Foo {
         return "bar";
     }
 
+    public methodReturningVoid(): void {
+    }
+
     public concatStringWithNumber(sampleString: string, sampleNumber: number): string {
         return sampleString + sampleNumber;
     }

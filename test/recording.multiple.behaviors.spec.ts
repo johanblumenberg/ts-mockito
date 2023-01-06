@@ -103,6 +103,22 @@ describe("recording multiple behaviors", () => {
         });
     });
 
+    it("should allow thenReturn without value for void return type", () => {
+        // given
+        when(mockedFoo.methodReturningVoid()).thenReturn();
+
+        // when
+        const value = foo.methodReturningVoid();
+
+        // then
+        expect(value).toBe(undefined);
+    });
+
+    // Should not compile
+    // it("should not allow thenReturn without value for non void return type", () => {
+    //   when(mockedFoo.getBar()).thenReturn();
+    // });
+
     describe("when return values are mixed with throw errors", () => {
         it("uses one by one and repeat last one infinitely", () => {
             // given
