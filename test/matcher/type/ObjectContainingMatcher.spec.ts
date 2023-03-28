@@ -1,5 +1,5 @@
 import {Matcher} from "../../../src/matcher/type/Matcher";
-import {objectContaining} from "../../../src/ts-mockito";
+import {objectContaining, startsWith} from "../../../src/ts-mockito";
 
 describe("ObjectContainingMatcher", () => {
     describe("checking if source object contains given object", () => {
@@ -32,6 +32,34 @@ describe("ObjectContainingMatcher", () => {
                 expect(result).toBeFalsy();
             });
         });
+    });
+
+    describe("accept matchers as values", () => {
+      it("should match using matcher as value", () => {
+        const testObj: Matcher = objectContaining({ key: startsWith("abc") }) as unknown as Matcher;
+        const result = testObj.match({key: "abcdef"});
+        expect(result).toBeTruthy();
+      });
+
+      it("should not match using matcher as value with mismatching value", () => {
+        const testObj: Matcher = objectContaining({ key: startsWith("abc") }) as unknown as Matcher;
+        const result = testObj.match({key: "def"});
+        expect(result).toBeFalsy();
+      });
+    });
+
+    describe("accept matchers as values in arrays", () => {
+      it("should match using matcher as value", () => {
+        const testObj: Matcher = objectContaining({ key: [startsWith("abc")] }) as unknown as Matcher;
+        const result = testObj.match({key: ["abcdef"]});
+        expect(result).toBeTruthy();
+      });
+
+      it("should not match using matcher as value with mismatching value", () => {
+        const testObj: Matcher = objectContaining({ key: [startsWith("abc")] }) as unknown as Matcher;
+        const result = testObj.match({key: ["def"]});
+        expect(result).toBeFalsy();
+      });
     });
 
     describe("types", () => {

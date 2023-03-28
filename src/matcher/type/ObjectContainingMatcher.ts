@@ -7,7 +7,13 @@ export class ObjectContainingMatcher extends Matcher {
     }
 
     public match(value: Object): boolean {
-        return _.isMatch(value, this.expectedValue);
+        return _.isMatchWith(value, this.expectedValue, (objValue, srcValue) => {
+          if (srcValue instanceof Matcher) {
+            return srcValue.match(objValue);
+          } else {
+            return undefined;
+          }
+        });
     }
 
     public toString(): string {
