@@ -18,6 +18,9 @@ Fork of [ts-mockito](https://github.com/NagRock/ts-mockito), which will be kept 
  - [Date matchers](https://github.com/johanblumenberg/ts-mockito/commit/15d35ac7490469d529ccc3665bf09606660c918d)
  - [Numberic matchers](https://github.com/johanblumenberg/ts-mockito/commit/32f4f7acab81be7912f676b8cfc8efca26a06937)
 
+### 1.0.36
+ - [Recursive matching](https://github.com/johanblumenberg/ts-mockito#recursive-matching) ([commit](https://github.com/johanblumenberg/ts-mockito/commit/0dc7eccd0f1c8216a3cceeb4061958d76aa3ce4b))
+ - [_ as an alias for `anything()`](https://github.com/johanblumenberg/ts-mockito#_-as-an-alias-for-anything) ([commit](https://github.com/johanblumenberg/ts-mockito/commit/b858e72b5c9dc19709497aae635edc3bae3421ae))
 ## Installation
 
 `npm install @johanblumenberg/ts-mockito --save-dev`
@@ -120,6 +123,40 @@ when(props.text).thenReturn('OK');
 when(props.onClick()).thenReturn();
 
 let c = mount(<MyButton {...instance(props)}>);
+```
+
+### Recursive matching
+
+``` typescript
+// Creating mock
+let mockedFoo:Foo = mock(Foo);
+
+// Getting instance from mock
+let foo:Foo = instance(mockedFoo);
+
+// Using instance in source code
+foo.getBar({name: "John Doe"});
+foo.getBar({name: "John Smith"});
+
+// Explicit, readable verification
+verify(mockedFoo.getBar(objectContaining({name: startsWith("John")}))).twice();
+```
+
+### `_` as an alias for `anything()`
+
+``` typescript
+// Creating mock
+let mockedFoo:Foo = mock(Foo);
+
+// Getting instance from mock
+let foo:Foo = instance(mockedFoo);
+
+// Using instance in source code
+foo.getBar(3);
+
+// Using anything() is identical to using _
+verify(mockedFoo.getBar(anything())).called();
+verify(mockedFoo.getBar(_)).called();
 ```
 
 ## Usage
