@@ -149,6 +149,8 @@ export function anything(): any {
     return new AnythingMatcher() as any;
 }
 
+export const _ = anything();
+
 export function between(min: number, max: number): number {
     return new BetweenMatcher(min, max) as any;
 }
@@ -258,6 +260,7 @@ export default {
     anyNumber,
     anyString,
     anything,
+    _,
     between,
     deepEqual,
     notNull,
