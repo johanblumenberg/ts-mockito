@@ -125,6 +125,10 @@ export function reset<T>(mockedValue: T): void {
     (mockedValue as any).__tsmockitoMocker.reset();
 }
 
+export function resetStubs<T>(mockedValue: T): void {
+  (mockedValue as any).__tsmockitoMocker.resetStubs();
+}
+
 export function resetCalls<T>(mockedValue: T): void {
     (mockedValue as any).__tsmockitoMocker.resetCalls();
 }
@@ -254,6 +258,7 @@ export default {
     instance,
     capture,
     reset,
+    resetStubs,
     resetCalls,
     anyOfClass,
     anyFunction,

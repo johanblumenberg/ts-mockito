@@ -1,4 +1,4 @@
-import {anything, instance, mock, reset, verify, when} from "../src/ts-mockito";
+import {anything, instance, mock, reset, resetStubs, verify, when} from "../src/ts-mockito";
 import {Foo} from "./utils/Foo";
 
 describe("resetting mocked object", () => {
@@ -162,4 +162,102 @@ describe("resetting mocked object", () => {
             });
         });
     });
+});
+
+describe("resetting mocked object stubs", () => {
+  let mockedFoo: Foo;
+  let foo: Foo;
+
+  beforeEach(() => {
+      mockedFoo = mock(Foo);
+      foo = instance(mockedFoo);
+  });
+
+  describe("when method has been called once", () => {
+      describe("but later stub has been reset", () => {
+          it("shows that still been called", () => {
+              // given
+              foo.getBar();
+              verify(mockedFoo.getBar()).once();
+
+              // when
+              resetStubs(mockedFoo);
+
+              // then
+              verify(mockedFoo.getBar()).once();
+          });
+      });
+  });
+
+  describe("when two different methods has been called twice", () => {
+      describe("but later stub has been reset", () => {
+          it("shows that still been called", () => {
+              // given
+              foo.getBar();
+              foo.getBar();
+              foo.sumTwoNumbers(2, 3);
+              foo.sumTwoNumbers(2, 3);
+              verify(mockedFoo.getBar()).twice();
+              verify(mockedFoo.sumTwoNumbers(2, 3)).twice();
+
+              // when
+              resetStubs(mockedFoo);
+
+              // then
+              verify(mockedFoo.getBar()).twice();
+              verify(mockedFoo.sumTwoNumbers(2, 3)).twice();
+              verify(mockedFoo.sumTwoNumbers(anything(), anything())).twice();
+          });
+      });
+  });
+
+  describe("when two different methods has been called", () => {
+      describe("but later stub has been reset", () => {
+          it("throws exception with information that methods has still been called", () => {
+              // given
+              foo.getBar();
+              foo.sumTwoNumbers(2, 3);
+              verify(mockedFoo.getBar()).calledBefore(mockedFoo.sumTwoNumbers(2, 3));
+
+              // when
+              resetStubs(mockedFoo);
+
+              // then
+              verify(mockedFoo.getBar()).calledBefore(mockedFoo.sumTwoNumbers(2, 3));
+          });
+      });
+  });
+
+  describe("when object has been stubbed", () => {
+      describe("but later stub has been reset", () => {
+          it("should reset configured stubs", () => {
+              // given
+              when(mockedFoo.convertNumberToString(3)).thenReturn("three");
+              resetStubs(mockedFoo);
+
+              // when
+              const result: string = foo.convertNumberToString(3);
+
+              // then
+              expect(result).toBeNull();
+          });
+      });
+  });
+
+  describe("when object has been stubbed", () => {
+      describe("but later stub has been reset", () => {
+          it("should be able to setup new stubs", () => {
+              // given
+              when(mockedFoo.convertNumberToString(3)).thenReturn("three");
+              resetStubs(mockedFoo);
+              when(mockedFoo.convertNumberToString(3)).thenReturn("newStubbedValue");
+
+              // when
+              const result: string = foo.convertNumberToString(3);
+
+              // then
+              expect(result).toEqual("newStubbedValue");
+          });
+      });
+  });
 });

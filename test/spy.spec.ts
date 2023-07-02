@@ -1,4 +1,4 @@
-import {capture, reset, spy, verify, when} from "../src/ts-mockito";
+import {capture, reset, resetStubs, spy, verify, when} from "../src/ts-mockito";
 
 describe("spying on a real object", () => {
     class Real {
@@ -222,6 +222,62 @@ describe("spying on a real object", () => {
             expect(foo.baz).toBe(3);
         });
     });
+
+    describe("resetting stubs", () => {
+      it("restores a call to the real method", () => {
+          // given
+          const foo = new Real();
+          const spiedFoo = spy(foo);
+
+          // when
+          when(spiedFoo.bar()).thenReturn(3);
+          resetStubs(spiedFoo);
+
+          // then
+          expect(foo.bar()).toBe(2);
+      });
+
+      it("set new stub calls to the real method", () => {
+        // given
+        const foo = new Real();
+        const spiedFoo = spy(foo);
+
+        // when
+        when(spiedFoo.bar()).thenReturn(3);
+        resetStubs(spiedFoo);
+        when(spiedFoo.bar()).thenReturn(4);
+
+        // then
+        expect(foo.bar()).toBe(4);
+    });
+
+    it("restores getter properties", () => {
+          // given
+          const foo = new Real();
+          const spiedFoo = spy(foo);
+
+          // when
+          when(spiedFoo.baz).thenReturn(42);
+          resetStubs(spiedFoo);
+
+          // then
+          expect(foo.baz).toBe(3);
+      });
+
+      it("set new stub properties", () => {
+        // given
+        const foo = new Real();
+        const spiedFoo = spy(foo);
+
+        // when
+        when(spiedFoo.baz).thenReturn(42);
+        resetStubs(spiedFoo);
+        when(spiedFoo.baz).thenReturn(43);
+
+        // then
+        expect(foo.baz).toBe(43);
+    });
+  });
 
     describe("spying on object which doesn't inherit from anything", () => {
         let bareObject;

@@ -83,6 +83,10 @@ export class Mocker {
         this.methodActions = [];
     }
 
+    public resetStubs(): void {
+      this.methodStubCollections = {};
+    }
+
     public resetCalls(): void {
         this.methodActions = [];
     }
