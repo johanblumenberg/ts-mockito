@@ -21,6 +21,10 @@ Fork of [ts-mockito](https://github.com/NagRock/ts-mockito), which will be kept 
 ### 1.0.36
  - [Recursive matching](https://github.com/johanblumenberg/ts-mockito#recursive-matching) ([commit](https://github.com/johanblumenberg/ts-mockito/commit/0dc7eccd0f1c8216a3cceeb4061958d76aa3ce4b))
  - [_ as an alias for `anything()`](https://github.com/johanblumenberg/ts-mockito#_-as-an-alias-for-anything) ([commit](https://github.com/johanblumenberg/ts-mockito/commit/b858e72b5c9dc19709497aae635edc3bae3421ae))
+
+### 1.0.37
+ - [Reset stubs](https://github.com/johanblumenberg/ts-mockito#resetting-mock-stubs) ([commit](https://github.com/johanblumenberg/ts-mockito/commit/430e566d901f6627a740baa3224fa77a97fd403c))
+
 ## Installation
 
 `npm install @johanblumenberg/ts-mockito --save-dev`
@@ -330,7 +334,7 @@ resetCalls(mockedFoo);
 verify(mockedFoo.getBar(1)).never();      // has never been called after reset
 ```
 
-### Resetting mock
+### Resetting mock stubs
 
 Or reset mock call counter with all stubs
 
@@ -348,7 +352,30 @@ console.log(foo.getBar(1));               // "one" - as defined in stub
 verify(mockedFoo.getBar(1)).twice();      // getBar with arg "1" has been called twice
 
 // Reset mock
-reset(mockedFoo);
+resetStubs(mockedFoo);
+
+console.log(foo.getBar(1));               // null - previously added stub has been removed
+```
+
+### Resetting mocks
+
+Resetting a mock will reset both call count and stub calls. For a spy it will also reset the original object, removing the spy.
+
+``` typescript
+// Creating mock
+let mockedFoo:Foo = mock(Foo);
+when(mockedFoo.getBar(1)).thenReturn("one").
+
+// Getting instance
+let foo:Foo = instance(mockedFoo);
+
+// Some calls
+console.log(foo.getBar(1));               // "one" - as defined in stub
+console.log(foo.getBar(1));               // "one" - as defined in stub
+verify(mockedFoo.getBar(1)).twice();      // getBar with arg "1" has been called twice
+
+// Reset mock
+resetStubs(mockedFoo);
 
 // Call count verification
 verify(mockedFoo.getBar(1)).never();      // has never been called after reset
