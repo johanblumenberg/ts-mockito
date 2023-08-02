@@ -42,7 +42,7 @@ import {Spy} from "./Spy";
 // Keep a reference to the original, in case it is replaced with fake timers
 // by some library like jest or lolex
 const originalSetTimeout = setTimeout;
-const originalSetImmediate = setImmediate;
+const originalSetImmediate = 'setImmediate' in globalThis ? setImmediate : setTimeout;
 
 export {MockPropertyPolicy} from "./Mock";
 
