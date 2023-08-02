@@ -80,7 +80,14 @@ export function cmock<R, T extends any[]>(): new (...args: T) => R {
     return fnmock() as any;
 }
 
+let expectNothing = () => {
+    expectNothing = 'expect' in globalThis && 'nothing' in expect()
+        ? () => { expect().nothing(); }
+        : () => {};
+    expectNothing();
+};
 export function verify<T>(method: T): MethodStubVerificator<T> {
+    expectNothing();
     return new MethodStubVerificator(method as any);
 }
 
