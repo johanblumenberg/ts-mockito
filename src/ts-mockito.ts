@@ -86,6 +86,7 @@ let expectNothing = () => {
         : () => {};
     expectNothing();
 };
+export const originalExpectNothing = expectNothing;
 export function verify<T>(method: T): MethodStubVerificator<T> {
     expectNothing();
     return new MethodStubVerificator(method as any);
