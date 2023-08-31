@@ -81,7 +81,7 @@ export function cmock<R, T extends any[]>(): new (...args: T) => R {
 }
 
 /**
- * Avoid warnings from jasmine on the form:
+ * Avoid warnings from jasmine of the form:
  *   WARN: 'Spec '<spec>' has no expectations.'
  * This warning is logged when a test doesn't have
  * any expectations using jasmine `expect(...)`.
