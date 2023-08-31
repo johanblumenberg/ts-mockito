@@ -25,6 +25,10 @@ Fork of [ts-mockito](https://github.com/NagRock/ts-mockito), which will be kept 
 ### 1.0.37
  - [Reset stubs](https://github.com/johanblumenberg/ts-mockito#resetting-mock-stubs) ([commit](https://github.com/johanblumenberg/ts-mockito/commit/430e566d901f6627a740baa3224fa77a97fd403c))
 
+### 1.0.39
+
+- [Add an expect().nothing() call to verify()](https://github.com/johanblumenberg/ts-mockito/commit/f78bd62fea238f1bf735451a33ffbe90f184add4)
+
 ## Installation
 
 `npm install @johanblumenberg/ts-mockito --save-dev`
