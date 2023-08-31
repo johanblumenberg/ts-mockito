@@ -1,7 +1,7 @@
 module.exports = function (config) {
     config.set({
 
-        frameworks: ["jasmine", "karma-typescript"],
+        frameworks: ["jasmine", "karma-typescript", "jasmine-spec-tags"],
 
         files: [
             "node_modules/babel-polyfill/dist/polyfill.js",

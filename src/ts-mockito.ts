@@ -80,7 +80,21 @@ export function cmock<R, T extends any[]>(): new (...args: T) => R {
     return fnmock() as any;
 }
 
+/**
+ * Avoid warnings from jasmine of the form:
+ *   WARN: 'Spec '<spec>' has no expectations.'
+ * This warning is logged when a test doesn't have
+ * any expectations using jasmine `expect(...)`.
+ */
+let expectNothing = () => {
+    expectNothing = 'expect' in globalThis && 'nothing' in expect()
+        ? () => { expect().nothing(); }
+        : () => {};
+    expectNothing();
+};
+
 export function verify<T>(method: T): MethodStubVerificator<T> {
+    expectNothing();
     return new MethodStubVerificator(method as any);
 }
 
