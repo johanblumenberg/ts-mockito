@@ -29,6 +29,10 @@ Fork of [ts-mockito](https://github.com/NagRock/ts-mockito), which will be kept 
 
 - [Add an expect().nothing() call to verify()](https://github.com/johanblumenberg/ts-mockito/commit/f78bd62fea238f1bf735451a33ffbe90f184add4)
 
+### 1.0.40
+
+- [Log mock invocations`](#log-mock-invocations)
+
 ## Installation
 
 `npm install @johanblumenberg/ts-mockito --save-dev`
@@ -508,6 +512,21 @@ const spiedFoo = spy(foo);
 foo.bar();
 
 console.log(capture(spiedFoo.bar).last()); // [42] 
+```
+
+### Log mock invocations
+
+Sometimes it is useful to be able to see all invocations on a mocked object,
+for example if you are testing a component which you are not sure exactly
+how it works.
+
+``` typescript
+let mockedFoo:Foo = imock({logInvocations: true});
+let foo:Foo = instance(mockedFoo);
+
+foo.bar("hello world");
+// This will log:
+//   call: bar("hello world")
 ```
 
 ### Thanks
