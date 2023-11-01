@@ -8,7 +8,7 @@ export class Spy extends Mocker {
     private realMethods: { [key: string]: RealMethod };
 
     constructor(instance: any) {
-        super(instance.constructor, MockPropertyPolicy.StubAsProperty, instance);
+        super(instance.constructor, {propertyPolicy: MockPropertyPolicy.StubAsProperty}, instance);
 
         if (_.isObject(instance)) {
             this.processProperties(instance);

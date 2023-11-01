@@ -9,11 +9,17 @@ import {strictEqual} from "./ts-mockito";
 import {MockableFunctionsFinder} from "./utils/MockableFunctionsFinder";
 import {ObjectInspector} from "./utils/ObjectInspector";
 import {ObjectPropertyCodeRetriever} from "./utils/ObjectPropertyCodeRetriever";
+import { MethodCallToStringConverter } from "./utils/MethodCallToStringConverter";
 
 export enum MockPropertyPolicy {
     StubAsProperty,
     StubAsMethod,
     Throw,
+}
+
+export interface MockOptions {
+  propertyPolicy?: MockPropertyPolicy;
+  logInvocations?: Boolean;
 }
 
 export class Mocker {
@@ -25,8 +31,9 @@ export class Mocker {
     private objectPropertyCodeRetriever = new ObjectPropertyCodeRetriever();
     private excludedPropertyNames: string[] = ["hasOwnProperty"];
 
-    constructor(private clazz: any, policy: MockPropertyPolicy, protected instance: any = {}) {
-        this.mock.__policy = policy;
+    constructor(private clazz: any, options: MockOptions, protected instance: any = {}) {
+        this.mock.__policy = options.propertyPolicy ?? MockPropertyPolicy.StubAsMethod;
+        this.mock.__logInvocations = options.logInvocations ?? false;
 
         this.mock.__tsmockitoInstance = this.instance;
         this.mock.__tsmockitoMocker = this;
@@ -158,6 +165,11 @@ export class Mocker {
         const actionListener = (thisArg: any, args: any[]) => {
             const action: MethodAction = new MethodAction(key, args);
             this.methodActions.push(action);
+
+            if (this.mock.__logInvocations) {
+                console.log("call: " + MethodCallToStringConverter.convertActualCalls([action])[0]);
+            }
+
             const methodStub = this.getMethodStub(key, args);
             methodStub.execute(args, thisArg);
             return methodStub.getValue();

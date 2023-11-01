@@ -5,11 +5,9 @@ import {MethodCallToStringConverter} from "./utils/MethodCallToStringConverter";
 const localSetTimeout = setTimeout;
 
 export class MethodStubVerificator<T> {
-    private methodCallToStringConverter: MethodCallToStringConverter = new MethodCallToStringConverter();
-
     private actualCalls() {
         const calls = this.methodToVerify.mocker.getActionsByName(this.methodToVerify.methodName);
-        return 'Actual calls:\n  ' + this.methodCallToStringConverter.convertActualCalls(calls).join('\n  ');
+        return 'Actual calls:\n  ' + MethodCallToStringConverter.convertActualCalls(calls).join('\n  ');
     }
 
     constructor(private methodToVerify: MethodToStub) {
@@ -39,7 +37,7 @@ export class MethodStubVerificator<T> {
     public times(value: number): void {
         const allMatchingActions = this.methodToVerify.mocker.getAllMatchingActions(this.methodToVerify.methodName, this.methodToVerify.matchers);
         if (value !== allMatchingActions.length) {
-            const methodToVerifyAsString = this.methodCallToStringConverter.convert(this.methodToVerify);            
+            const methodToVerifyAsString = MethodCallToStringConverter.convert(this.methodToVerify);            
             const msg = `Expected "${methodToVerifyAsString}to be called ${value} time(s). But has been called ${allMatchingActions.length} time(s).`;
             throw new Error(msg + '\n' + this.actualCalls());
         }
@@ -48,7 +46,7 @@ export class MethodStubVerificator<T> {
     public atLeast(value: number): void {
         const allMatchingActions = this.methodToVerify.mocker.getAllMatchingActions(this.methodToVerify.methodName, this.methodToVerify.matchers);
         if (value > allMatchingActions.length) {
-            const methodToVerifyAsString = this.methodCallToStringConverter.convert(this.methodToVerify);
+            const methodToVerifyAsString = MethodCallToStringConverter.convert(this.methodToVerify);
             const msg = `Expected "${methodToVerifyAsString}to be called at least ${value} time(s). But has been called ${allMatchingActions.length} time(s).`;
             throw new Error(msg + '\n' + this.actualCalls());
         }
@@ -57,7 +55,7 @@ export class MethodStubVerificator<T> {
     public atMost(value: number): void {
         const allMatchingActions = this.methodToVerify.mocker.getAllMatchingActions(this.methodToVerify.methodName, this.methodToVerify.matchers);
         if (value < allMatchingActions.length) {
-            const methodToVerifyAsString = this.methodCallToStringConverter.convert(this.methodToVerify);
+            const methodToVerifyAsString = MethodCallToStringConverter.convert(this.methodToVerify);
             const msg = `Expected "${methodToVerifyAsString}to be called at most ${value} time(s). But has been called ${allMatchingActions.length} time(s).`;
             throw new Error(msg + '\n' + this.actualCalls());
         }
@@ -68,8 +66,8 @@ export class MethodStubVerificator<T> {
 
         const firstMethodAction = this.methodToVerify.mocker.getFirstMatchingAction(this.methodToVerify.methodName, this.methodToVerify.matchers);
         const secondMethodAction = method.mocker.getFirstMatchingAction(method.methodName, method.matchers);
-        const mainMethodToVerifyAsString = this.methodCallToStringConverter.convert(this.methodToVerify);
-        const secondMethodAsString = this.methodCallToStringConverter.convert(method);
+        const mainMethodToVerifyAsString = MethodCallToStringConverter.convert(this.methodToVerify);
+        const secondMethodAsString = MethodCallToStringConverter.convert(method);
         const errorBeginning = `Expected "${mainMethodToVerifyAsString} to be called before ${secondMethodAsString}`;
 
         if (firstMethodAction && secondMethodAction) {
@@ -90,8 +88,8 @@ export class MethodStubVerificator<T> {
 
         const firstMethodAction = this.methodToVerify.mocker.getFirstMatchingAction(this.methodToVerify.methodName  , this.methodToVerify.matchers);
         const secondMethodAction = method.mocker.getFirstMatchingAction(method.methodName, method.matchers);
-        const mainMethodToVerifyAsString = this.methodCallToStringConverter.convert(this.methodToVerify);
-        const secondMethodAsString = this.methodCallToStringConverter.convert(method);
+        const mainMethodToVerifyAsString = MethodCallToStringConverter.convert(this.methodToVerify);
+        const secondMethodAsString = MethodCallToStringConverter.convert(method);
         const errorBeginning = `Expected "${mainMethodToVerifyAsString}to be called after ${secondMethodAsString}`;
 
         if (firstMethodAction && secondMethodAction) {
@@ -117,7 +115,7 @@ export class MethodStubVerificator<T> {
                 if (allMatchingActions.length > 0) {
                     resolve();
                 } else if (Date.now() >= expired) {
-                    const methodToVerifyAsString = this.methodCallToStringConverter.convert(this.methodToVerify);
+                    const methodToVerifyAsString = MethodCallToStringConverter.convert(this.methodToVerify);
                     reject(new Error(`Expected "${methodToVerifyAsString}to be called within ${ms} ms.`));
                 } else {
                     localSetTimeout(check, 1);

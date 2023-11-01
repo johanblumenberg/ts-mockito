@@ -6,7 +6,7 @@ function argToString(arg: any): string {
     const type = typeof arg;
 
     if (type === "string") {
-        return arg;
+        return `"${arg}"`;
     } else if (!arg || type === "number") {
         return String(arg);
     } else {
@@ -15,14 +15,14 @@ function argToString(arg: any): string {
 }
 
 export class MethodCallToStringConverter {
-    public convert(method: MethodToStub): string {
+    public static convert(method: MethodToStub): string {
         method.watcher.invoked();
 
         const stringifiedMatchers = method.matchers.map((matcher: Matcher) => matcher.toString()).join(", ");
         return `${method.methodName}(${stringifiedMatchers})" `;
     }
 
-    public convertActualCalls(calls: MethodAction[]): string[] {
+    public static convertActualCalls(calls: MethodAction[]): string[] {
         return calls.map(call => call.methodName + "(" + call.args.map(argToString).join(", ") + ")");
     }
 }

@@ -8,7 +8,6 @@ describe("verifying mocked object", () => {
     let foo: Foo;
     let mockedBar: Bar;
     let bar: Bar;
-    const methodCallToStringConverter: MethodCallToStringConverter = new MethodCallToStringConverter();
 
     beforeEach(() => {
         mockedFoo = mock(Foo);
@@ -351,8 +350,8 @@ describe("verifying mocked object", () => {
                     }
 
                     // then
-                    const firstCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
-                    const secondCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any));
+                    const firstCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
+                    const secondCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any));
                     expect(error.message).toContain("to be called before");
                     expect(error.message).toContain("but has been called after.");
                     expect(firstCallMsgIndex).toBeLessThan(secondCallMsgIndex);
@@ -375,9 +374,9 @@ describe("verifying mocked object", () => {
                     }
 
                     // then
-                    const firstCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
-                    const secondCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any));
-                    expect(error.message).toContain(`${methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any)}has never been called.`);
+                    const firstCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
+                    const secondCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any));
+                    expect(error.message).toContain(`${MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any)}has never been called.`);
                     expect(firstCallMsgIndex).toBeLessThan(secondCallMsgIndex);
                 });
             });
@@ -398,10 +397,10 @@ describe("verifying mocked object", () => {
                     }
 
                     // then
-                    const firstCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
-                    const secondCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any));
+                    const firstCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
+                    const secondCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any));
                     expect(error.message).toContain("to be called before");
-                    expect(error.message).toContain(`${methodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any)}has never been called.`);
+                    expect(error.message).toContain(`${MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any)}has never been called.`);
                     expect(firstCallMsgIndex).toBeLessThan(secondCallMsgIndex);
                 });
             });
@@ -421,8 +420,8 @@ describe("verifying mocked object", () => {
                     }
 
                     // then
-                    const firstCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
-                    const secondCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any));
+                    const firstCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
+                    const secondCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any));
                     expect(error.message).toContain("to be called before");
                     expect(error.message).toContain("none of them has been called.");
                     expect(firstCallMsgIndex).toBeLessThan(secondCallMsgIndex);
@@ -465,8 +464,8 @@ describe("verifying mocked object", () => {
                     }
 
                     // then
-                    const firstCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
-                    const secondCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any));
+                    const firstCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
+                    const secondCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any));
                     expect(error.message).toContain("to be called after");
                     expect(error.message).toContain("but has been called before.");
                     expect(firstCallMsgIndex).toBeLessThan(secondCallMsgIndex);
@@ -489,10 +488,10 @@ describe("verifying mocked object", () => {
                     }
 
                     // then
-                    const firstCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
-                    const secondCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any));
+                    const firstCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
+                    const secondCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any));
                     expect(error.message).toContain("to be called after");
-                    expect(error.message).toContain(`${methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any)}has never been called.`);
+                    expect(error.message).toContain(`${MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any)}has never been called.`);
                     expect(firstCallMsgIndex).toBeLessThan(secondCallMsgIndex);
                 });
             });
@@ -513,10 +512,10 @@ describe("verifying mocked object", () => {
                     }
 
                     // then
-                    const firstCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
-                    const secondCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any));
+                    const firstCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
+                    const secondCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any));
                     expect(error.message).toContain("to be called after");
-                    expect(error.message).toContain(`${methodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any)}has never been called.`);
+                    expect(error.message).toContain(`${MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any)}has never been called.`);
                     expect(firstCallMsgIndex).toBeLessThan(secondCallMsgIndex);
                 });
             });
@@ -536,8 +535,8 @@ describe("verifying mocked object", () => {
                     }
 
                     // then
-                    const firstCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
-                    const secondCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any));
+                    const firstCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
+                    const secondCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(secondCallParam) as any));
                     expect(error.message).toContain("to be called after");
                     expect(error.message).toContain("none of them has been called.");
                     expect(firstCallMsgIndex).toBeLessThan(secondCallMsgIndex);
@@ -580,8 +579,8 @@ describe("verifying mocked object", () => {
                     }
 
                     // then
-                    const firstCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
-                    const secondCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any));
+                    const firstCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
+                    const secondCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any));
                     expect(error.message).toContain("to be called before");
                     expect(error.message).toContain("but has been called after.");
                     expect(firstCallMsgIndex).toBeLessThan(secondCallMsgIndex);
@@ -604,9 +603,9 @@ describe("verifying mocked object", () => {
                     }
 
                     // then
-                    const firstCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
-                    const secondCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any));
-                    expect(error.message).toContain(`${methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any)}has never been called.`);
+                    const firstCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
+                    const secondCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any));
+                    expect(error.message).toContain(`${MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any)}has never been called.`);
                     expect(firstCallMsgIndex).toBeLessThan(secondCallMsgIndex);
                 });
             });
@@ -627,10 +626,10 @@ describe("verifying mocked object", () => {
                     }
 
                     // then
-                    const firstCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
-                    const secondCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any));
+                    const firstCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
+                    const secondCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any));
                     expect(error.message).toContain("to be called before");
-                    expect(error.message).toContain(`${methodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any)}has never been called.`);
+                    expect(error.message).toContain(`${MethodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any)}has never been called.`);
                     expect(firstCallMsgIndex).toBeLessThan(secondCallMsgIndex);
                 });
             });
@@ -650,8 +649,8 @@ describe("verifying mocked object", () => {
                     }
 
                     // then
-                    const firstCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
-                    const secondCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any));
+                    const firstCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
+                    const secondCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any));
                     expect(error.message).toContain("to be called before");
                     expect(error.message).toContain("none of them has been called.");
                     expect(firstCallMsgIndex).toBeLessThan(secondCallMsgIndex);
@@ -694,8 +693,8 @@ describe("verifying mocked object", () => {
                     }
 
                     // then
-                    const firstCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
-                    const secondCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any));
+                    const firstCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
+                    const secondCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any));
                     expect(error.message).toContain("to be called after");
                     expect(error.message).toContain("but has been called before.");
                     expect(firstCallMsgIndex).toBeLessThan(secondCallMsgIndex);
@@ -718,10 +717,10 @@ describe("verifying mocked object", () => {
                     }
 
                     // then
-                    const firstCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
-                    const secondCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any));
+                    const firstCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
+                    const secondCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any));
                     expect(error.message).toContain("to be called after");
-                    expect(error.message).toContain(`${methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any)}has never been called.`);
+                    expect(error.message).toContain(`${MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any)}has never been called.`);
                     expect(firstCallMsgIndex).toBeLessThan(secondCallMsgIndex);
                 });
             });
@@ -742,10 +741,10 @@ describe("verifying mocked object", () => {
                     }
 
                     // then
-                    const firstCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
-                    const secondCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any));
+                    const firstCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
+                    const secondCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any));
                     expect(error.message).toContain("to be called after");
-                    expect(error.message).toContain(`${methodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any)}has never been called.`);
+                    expect(error.message).toContain(`${MethodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any)}has never been called.`);
                     expect(firstCallMsgIndex).toBeLessThan(secondCallMsgIndex);
                 });
             });
@@ -765,8 +764,8 @@ describe("verifying mocked object", () => {
                     }
 
                     // then
-                    const firstCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
-                    const secondCallMsgIndex = error.message.indexOf(methodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any));
+                    const firstCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedFoo.convertNumberToString(firstCallParam) as any));
+                    const secondCallMsgIndex = error.message.indexOf(MethodCallToStringConverter.convert(mockedBar.differentConvertNumberToString(secondCallParam) as any));
                     expect(error.message).toContain("to be called after");
                     expect(error.message).toContain("none of them has been called.");
                     expect(firstCallMsgIndex).toBeLessThan(secondCallMsgIndex);

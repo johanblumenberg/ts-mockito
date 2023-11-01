@@ -36,7 +36,7 @@ import {StrictEqualMatcher} from "./matcher/type/StrictEqualMatcher";
 import {AsyncMethodStubSetter,VoidAsyncMethodStubSetter,MethodStubSetter,SyncMethodStubSetter,VoidSyncMethodStubSetter} from "./MethodStubSetter";
 import {MethodStubVerificator} from "./MethodStubVerificator";
 import {MethodToStub} from "./MethodToStub";
-import {Mocker, MockPropertyPolicy} from "./Mock";
+import {Mocker, MockPropertyPolicy, MockOptions} from "./Mock";
 import {Spy} from "./Spy";
 
 // Keep a reference to the original, in case it is replaced with fake timers
@@ -44,19 +44,28 @@ import {Spy} from "./Spy";
 const originalSetTimeout = setTimeout;
 const originalSetImmediate = 'setImmediate' in globalThis ? setImmediate : fn => setTimeout(fn, 0);
 
-export {MockPropertyPolicy} from "./Mock";
+export {MockPropertyPolicy, MockOptions} from "./Mock";
 
 export function spy<T>(instanceToSpy: T): T {
     return new Spy(instanceToSpy).getMock();
 }
 
 export function mock<T>(clazz: (new(...args: any[]) => T) | (Function & { prototype: T }), policy: MockPropertyPolicy = MockPropertyPolicy.StubAsProperty): T {
-    return new Mocker(clazz, policy).getMock();
+    return new Mocker(clazz, {propertyPolicy: policy}).getMock();
 }
 
-export function imock<T>(policy: MockPropertyPolicy = MockPropertyPolicy.StubAsMethod): NonNullable<T> extends object ? T : unknown {
+export function imock<T>(policy?: MockPropertyPolicy): NonNullable<T> extends object ? T : unknown;
+export function imock<T>(options?: MockOptions): NonNullable<T> extends object ? T : unknown;
+export function imock<T>(optionsOrPolicy: MockPropertyPolicy | MockOptions): NonNullable<T> extends object ? T : unknown {
+    const options = typeof optionsOrPolicy === 'object' ?
+        optionsOrPolicy :
+        {
+            propertyPolicy: optionsOrPolicy,
+            logInvocations: false,
+        };
+
     class Empty {}
-    const mockedValue = new Mocker(Empty, policy).getMock();
+    const mockedValue = new Mocker(Empty, options).getMock();
 
     if (typeof Proxy === "undefined") {
         throw new Error("Mocking of interfaces requires support for Proxy objects");
