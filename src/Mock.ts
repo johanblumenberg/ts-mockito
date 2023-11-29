@@ -294,4 +294,8 @@ export class Mocker {
             return this.getEmptyMethodStub(key, args);
         }
     }
+
+    public proceed(methodName: string, args: any[]): any {
+        return undefined;
+    }
 }

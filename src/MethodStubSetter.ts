@@ -1,5 +1,5 @@
 import {MethodToStub} from "./MethodToStub";
-import {CallFunctionMethodStub} from "./stub/CallFunctionMethodStub";
+import {CallFunctionMethodStub, MockInvocation} from "./stub/CallFunctionMethodStub";
 import {RejectPromiseMethodStub} from "./stub/RejectPromiseMethodStub";
 import {ResolvePromiseMethodStub} from "./stub/ResolvePromiseMethodStub";
 import {ReturnValueMethodStub} from "./stub/ReturnValueMethodStub";
@@ -8,14 +8,14 @@ import {ThrowErrorMethodStub} from "./stub/ThrowErrorMethodStub";
 export interface SyncMethodStubSetter<T> {
     thenReturn(head: T, ...tail: T[]): this;
     thenThrow(head: Error, ...tail: Error[]): this;
-    thenCall(func: (...args: any[]) => T): this;
+    thenCall(func: (this: MockInvocation<T>, ...args: any[]) => T): this;
 }
 
 export interface VoidSyncMethodStubSetter<T> {
   thenReturn(head: T, ...tail: T[]): this;
   thenReturn(): this;
   thenThrow(head: Error, ...tail: Error[]): this;
-  thenCall(func: (...args: any[]) => T): this;
+  thenCall(func: (this: MockInvocation<T>, ...args: any[]) => T): this;
 }
 
 export interface AsyncMethodStubSetter<T, ResolveType> extends SyncMethodStubSetter<T> {
@@ -56,8 +56,8 @@ export class MethodStubSetter<T, ResolveType> implements AsyncMethodStubSetter<T
         return this;
     }
 
-    public thenCall(func: (...args: any[]) => T): this {
-        this.methodToStub.methodStubCollection.add(new CallFunctionMethodStub(this.groupIndex, this.methodToStub.matchers, func));
+    public thenCall(func: (this: MockInvocation<T>, ...args: any[]) => T): this {
+        this.methodToStub.methodStubCollection.add(new CallFunctionMethodStub<T>(this.groupIndex, this.methodToStub.matchers, this.methodToStub, func));
         return this;
     }
 

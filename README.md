@@ -529,6 +529,22 @@ foo.bar("hello world");
 //   call: bar("hello world")
 ```
 
+### Proceed to call original method on a spy
+
+Sometimes it is useful to invoke the original method on a spy and change the return value. Mocking the method using `when(object.method()).thenReturn(newValue)` can be done, but this will not invoke the original method, and it will not be possible to use the original return value and modify it before it is returned.
+
+This can be accomplished using `thenCall()` and invoke the original method.
+
+```typescript
+const foo: Foo = new Foo();
+let spiedFoo = spy(foo);
+
+when(spiedFoo.method(_, _)).thenCall(function (arg1, arg2) {
+    const originalResult = this.proceed(arg1, arg2);
+    return "modified " + originalResult;
+});
+```
+
 ### Thanks
 
 * Szczepan Faber (https://www.linkedin.com/in/szczepiq) 

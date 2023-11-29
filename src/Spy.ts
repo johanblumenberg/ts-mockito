@@ -70,4 +70,11 @@ export class Spy extends Mocker {
         this.realMethods[key] = new RealMethod(descriptor, prototype === this.instance);
         this.instance[key] = this.createActionListener(key);
     }
+
+    public proceed(methodName: string, args: any[]): any {
+        const inst = this.instance;
+        const method = this.realMethods[methodName].descriptor.value;
+
+        return method.apply(inst, args);
+      }
 }
