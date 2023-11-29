@@ -33,6 +33,10 @@ Fork of [ts-mockito](https://github.com/NagRock/ts-mockito), which will be kept 
 
 - [Log mock invocations`](#log-mock-invocations)
 
+### 1.0.41
+
+- [Proceed to call original method`](#proceed-to-call-original-method)
+
 ## Installation
 
 `npm install @johanblumenberg/ts-mockito --save-dev`
@@ -529,7 +533,7 @@ foo.bar("hello world");
 //   call: bar("hello world")
 ```
 
-### Proceed to call original method on a spy
+### Proceed to call original method
 
 Sometimes it is useful to invoke the original method on a spy and change the return value. Mocking the method using `when(object.method()).thenReturn(newValue)` can be done, but this will not invoke the original method, and it will not be possible to use the original return value and modify it before it is returned.
 
