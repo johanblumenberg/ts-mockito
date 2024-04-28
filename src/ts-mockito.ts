@@ -1,16 +1,4 @@
-import {
-    ArgCaptor,
-    ArgCaptor1,
-    ArgCaptor10,
-    ArgCaptor2,
-    ArgCaptor3,
-    ArgCaptor4,
-    ArgCaptor5,
-    ArgCaptor6,
-    ArgCaptor7,
-    ArgCaptor8,
-    ArgCaptor9,
-} from "./capture/ArgCaptor";
+import {ArgCaptor} from "./capture/ArgCaptor";
 import {AnyFunctionMatcher} from "./matcher/type/AnyFunctionMatcher";
 import {AnyNumberMatcher} from "./matcher/type/AnyNumberMatcher";
 import {AnyOfClassMatcher} from "./matcher/type/AnyOfClassMatcher";
@@ -122,22 +110,36 @@ export function instance<T>(mockedValue: T): T {
     return tsmockitoInstance;
 }
 
-export function capture<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9>(method: (a: T0, b: T1, c: T2, d: T3, e: T4, f: T5, g: T6, h: T7, i: T8, j: T9) => any): ArgCaptor10<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9>;
-export function capture<T0, T1, T2, T3, T4, T5, T6, T7, T8>(method: (a: T0, b: T1, c: T2, d: T3, e: T4, f: T5, g: T6, h: T7, i: T8) => any): ArgCaptor9<T0, T1, T2, T3, T4, T5, T6, T7, T8>;
-export function capture<T0, T1, T2, T3, T4, T5, T6, T7>(method: (a: T0, b: T1, c: T2, d: T3, e: T4, f: T5, g: T6, h: T7) => any): ArgCaptor8<T0, T1, T2, T3, T4, T5, T6, T7>;
-export function capture<T0, T1, T2, T3, T4, T5, T6>(method: (a: T0, b: T1, c: T2, d: T3, e: T4, f: T5, g: T6) => any): ArgCaptor7<T0, T1, T2, T3, T4, T5, T6>;
-export function capture<T0, T1, T2, T3, T4, T5>(method: (a: T0, b: T1, c: T2, d: T3, e: T4, f: T5) => any): ArgCaptor6<T0, T1, T2, T3, T4, T5>;
-export function capture<T0, T1, T2, T3, T4>(method: (a: T0, b: T1, c: T2, d: T3, e: T4) => any): ArgCaptor5<T0, T1, T2, T3, T4>;
-export function capture<T0, T1, T2, T3>(method: (a: T0, b: T1, c: T2, d: T3) => any): ArgCaptor4<T0, T1, T2, T3>;
-export function capture<T0, T1, T2>(method: (a: T0, b: T1, c: T2) => any): ArgCaptor3<T0, T1, T2>;
-export function capture<T0, T1>(method: (a: T0, b: T1) => any): ArgCaptor2<T0, T1>;
-export function capture<T0>(method: (a: T0) => any): ArgCaptor1<T0>;
-export function capture(method: (...args: any[]) => any): ArgCaptor {
+export function capture<T extends any[]>(method: (...args: T) => any): ArgCaptor<T>;
+export function capture<T extends any[], M extends T = T>(method: (...args: T) => any, matchers: M): ArgCaptor<T>;
+
+//
+// The above declarations of `capture()` covers functions with any number of
+// arguments.
+//
+// The below declarations of `capture()` are kept, to be backwards compatible with
+// explicitly given types to capture, such as `capture<number>(fn)` instead of the
+// new `capture<[number]>(fn)`.
+//
+export function capture<T0>(method: (a: T0) => any): ArgCaptor<[T0]>;
+export function capture<T0, T1>(method: (a: T0, b: T1) => any): ArgCaptor<[T0, T1]>;
+export function capture<T0, T1, T2>(method: (a: T0, b: T1, c: T2) => any): ArgCaptor<[T0, T1, T2]>;
+export function capture<T0, T1, T2, T3>(method: (a: T0, b: T1, c: T2, d: T3) => any): ArgCaptor<[T0, T1, T2, T3]>;
+export function capture<T0, T1, T2, T3, T4>(method: (a: T0, b: T1, c: T2, d: T3, e: T4) => any): ArgCaptor<[T0, T1, T2, T3, T4]>;
+export function capture<T0, T1, T2, T3, T4, T5>(method: (a: T0, b: T1, c: T2, d: T3, e: T4, f: T5) => any): ArgCaptor<[T0, T1, T2, T3, T4, T5]>;
+export function capture<T0, T1, T2, T3, T4, T5, T6>(method: (a: T0, b: T1, c: T2, d: T3, e: T4, f: T5, g: T6) => any): ArgCaptor<[T0, T1, T2, T3, T4, T5, T6]>;
+export function capture<T0, T1, T2, T3, T4, T5, T6, T7>(method: (a: T0, b: T1, c: T2, d: T3, e: T4, f: T5, g: T6, h: T7) => any): ArgCaptor<[T0, T1, T2, T3, T4, T5, T6, T7]>;
+export function capture<T0, T1, T2, T3, T4, T5, T6, T7, T8>(method: (a: T0, b: T1, c: T2, d: T3, e: T4, f: T5, g: T6, h: T7, i: T8) => any): ArgCaptor<[T0, T1, T2, T3, T4, T5, T6, T7, T8]>;
+export function capture<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9>(method: (a: T0, b: T1, c: T2, d: T3, e: T4, f: T5, g: T6, h: T7, i: T8, j: T9) => any): ArgCaptor<[T0, T1, T2, T3, T4, T5, T6, T7, T8, T9]>;
+
+export function capture(method: (...args: any[]) => any, matchers?: any[]): ArgCaptor<any[]> {
     const methodStub: MethodToStub = method();
     if (methodStub instanceof MethodToStub) {
         methodStub.watcher.invoked();
 
-        const actions = methodStub.mocker.getActionsByName(methodStub.methodName);
+        const actions = matchers ?
+          methodStub.mocker.getAllMatchingActions(methodStub.methodName, matchers) :
+          methodStub.mocker.getActionsByName(methodStub.methodName);
         return new ArgCaptor(actions);
     } else {
         throw Error("Cannot capture from not mocked object.");

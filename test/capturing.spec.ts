@@ -1,4 +1,4 @@
-import {capture, instance, mock} from "../src/ts-mockito";
+import {_, capture, instance, mock} from "../src/ts-mockito";
 import {Foo} from "./utils/Foo";
 
 describe("capturing method arguments", () => {
@@ -53,5 +53,48 @@ describe("capturing method arguments", () => {
                 expect(error.message).toContain("Cannot capture arguments");
             });
         });
+    });
+
+    it('should capture with explicit type arguments with one arg', () => {
+      foo.convertNumberToString(1);
+
+      const result = capture<number>(mockedFoo.convertNumberToString).last();
+      expect(result[0]).toBe(1);
+    });
+
+    it('should capture with explicit type arguments with two args', () => {
+      foo.concatStringWithNumber("first", 1);
+
+      const result = capture<string, number>(mockedFoo.concatStringWithNumber).last();
+      expect(result[0]).toBe("first");
+      expect(result[1]).toBe(1);
+    });
+  });
+
+describe("capture by matching", () => {
+    let mockedFoo: Foo;
+    let foo: Foo;
+
+    beforeEach(() => {
+        mockedFoo = mock(Foo);
+        foo = instance(mockedFoo);
+    });
+
+    it('should capture arguments', () => {
+        foo.concatStringWithNumber("first", 1);
+
+        const result = capture(mockedFoo.concatStringWithNumber, [_, _]).last();
+        expect(result[0]).toBe("first");
+        expect(result[1]).toBe(1);
+    });
+
+    it('should capture arguments with non-matching calls', () => {
+        foo.concatStringWithNumber("first", 1);
+        foo.concatStringWithNumber("second", 2);
+        foo.concatStringWithNumber("third", 3);
+
+        const result = capture(mockedFoo.concatStringWithNumber, ["second", _]).last();
+        expect(result[0]).toBe("second");
+        expect(result[1]).toBe(2);
     });
 });
