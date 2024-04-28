@@ -30,4 +30,8 @@ export class ArgCaptor<T extends any[]> {
         }
         return this.actions[index].args as T;
     }
+
+    public all(): T[] {
+        return this.actions.map(a => a.args as T);      
+    }
 }

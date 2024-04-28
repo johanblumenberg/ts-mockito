@@ -69,6 +69,21 @@ describe("capturing method arguments", () => {
       expect(result[0]).toBe("first");
       expect(result[1]).toBe(1);
     });
+
+    it("should return all invocations", () => {
+      foo.concatStringWithNumber("first", 1);
+      foo.concatStringWithNumber("second", 2);
+      foo.concatStringWithNumber("third", 3);
+
+      const result = capture(mockedFoo.concatStringWithNumber).all();
+      expect(result.length).toBe(3);
+      expect(result[0][0]).toBe("first");
+      expect(result[0][1]).toBe(1);
+      expect(result[1][0]).toBe("second");
+      expect(result[1][1]).toBe(2);
+      expect(result[2][0]).toBe("third");
+      expect(result[2][1]).toBe(3);
+    });
   });
 
 describe("capture by matching", () => {
@@ -96,5 +111,22 @@ describe("capture by matching", () => {
         const result = capture(mockedFoo.concatStringWithNumber, ["second", _]).last();
         expect(result[0]).toBe("second");
         expect(result[1]).toBe(2);
+    });
+
+    it("should return all matching invocations", () => {
+        foo.concatStringWithNumber("first", 1);
+        foo.concatStringWithNumber("second", 1);
+        foo.concatStringWithNumber("second", 2);
+        foo.concatStringWithNumber("second", 3);
+        foo.concatStringWithNumber("third", 3);
+
+        const result = capture(mockedFoo.concatStringWithNumber, ["second", _]).all();
+        expect(result.length).toBe(3);
+        expect(result[0][0]).toBe("second");
+        expect(result[0][1]).toBe(1);
+        expect(result[1][0]).toBe("second");
+        expect(result[1][1]).toBe(2);
+        expect(result[2][0]).toBe("second");
+        expect(result[2][1]).toBe(3);
     });
 });
