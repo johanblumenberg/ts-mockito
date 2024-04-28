@@ -31,11 +31,15 @@ Fork of [ts-mockito](https://github.com/NagRock/ts-mockito), which will be kept 
 
 ### 1.0.40
 
-- [Log mock invocations`](#log-mock-invocations)
+- [Log mock invocations](#log-mock-invocations)
 
 ### 1.0.41
 
-- [Proceed to call original method`](#proceed-to-call-original-method)
+- [Proceed to call original method](#proceed-to-call-original-method)
+
+### 1.0.42
+
+- [Improved argument capturing](#capture-by-matching-arguments)
 
 ## Installation
 
@@ -406,10 +410,30 @@ foo.sumTwoNumbers(1, 2);
 // Check first arg captor values
 const [firstArg, secondArg] = capture(mockedFoo.sumTwoNumbers).last();
 console.log(firstArg);    // prints 1
-console.log(secondArg);    // prints 2
+console.log(secondArg);   // prints 2
 ```
 
 You can also get other calls using `first()`, `second()`, `byCallIndex(3)` and more...
+
+### Capture by matching arguments
+
+It is also possible to capture arguments of a specific invocation, by providing
+matchers in the same way as when using `when()` or `verify()`.
+
+```typescript
+let mockedFoo:Foo = mock(Foo);
+let foo:Foo = instance(mockedFoo);
+
+// Call method
+foo.sumTwoNumbers(1, 1);
+foo.sumTwoNumbers(2, 9);
+foo.sumTwoNumbers(3, 1);
+
+// Check first arg captor values
+const [firstArg, secondArg] = capture(mockedFoo.sumTwoNumbers, [2, _]).last();
+console.log(firstArg);    // prints 2
+console.log(secondArg);   // prints 9
+```
 
 ### Recording multiple behaviors
 
@@ -548,6 +572,9 @@ when(spiedFoo.method(_, _)).thenCall(function (arg1, arg2) {
     return "modified " + originalResult;
 });
 ```
+
+### Improved argument capturing
+
 
 ### Thanks
 
