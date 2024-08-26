@@ -12,6 +12,7 @@ import {IsBeforeMatcher} from "./matcher/type/date/IsBeforeMatcher";
 import {IsBeforeOrEqualMatcher} from "./matcher/type/date/IsBeforeOrEqualMatcher";
 import {DeepEqualMatcher} from "./matcher/type/DeepEqualMatcher";
 import {EndsWithMatcher} from "./matcher/type/EndsWithMatcher";
+import { JsonContainingMatcher } from "./matcher/type/JsonContainingMatcher";
 import {MatchingStringMatcher} from "./matcher/type/MatchingStringMatcher";
 import {NotNullMatcher} from "./matcher/type/NotNullMatcher";
 import {GreaterThanMatcher} from "./matcher/type/number/GreaterThanMatcher";
@@ -26,6 +27,7 @@ import {MethodStubVerificator} from "./MethodStubVerificator";
 import {MethodToStub} from "./MethodToStub";
 import {Mocker, MockPropertyPolicy, MockOptions} from "./Mock";
 import {Spy} from "./Spy";
+import {Matcher} from './matcher/type/Matcher';
 
 // Keep a reference to the original, in case it is replaced with fake timers
 // by some library like jest or lolex
@@ -158,6 +160,8 @@ export function resetCalls<T>(mockedValue: T): void {
     (mockedValue as any).__tsmockitoMocker.resetCalls();
 }
 
+export {Matcher} from './matcher/type/Matcher';
+
 export function anyOfClass<T>(expectedClass: new (...args: any[]) => T): any {
     return new AnyOfClassMatcher(expectedClass) as any;
 }
@@ -217,6 +221,10 @@ type RecursivePartial<T> = {
 
 export function objectContaining<T>(expectedValue: RecursivePartial<T extends true ? T : T>): T {
     return new ObjectContainingMatcher(expectedValue) as any;
+}
+
+export function jsonContaining<T>(expectedValue: T): string {
+  return new JsonContainingMatcher(expectedValue) as any;
 }
 
 export type Deferred<T> = Promise<T> & {
@@ -285,6 +293,7 @@ export default {
     reset,
     resetStubs,
     resetCalls,
+    Matcher,
     anyOfClass,
     anyFunction,
     anyNumber,
@@ -299,6 +308,7 @@ export default {
     startsWith,
     endsWith,
     objectContaining,
+    jsonContaining,
     MockPropertyPolicy,
     defer,
     nextTick,

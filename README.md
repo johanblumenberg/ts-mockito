@@ -41,6 +41,11 @@ Fork of [ts-mockito](https://github.com/NagRock/ts-mockito), which will be kept 
 
 - [Improved argument capturing](#capture-by-matching-arguments)
 
+### 1.0.44
+
+- [Match by JSON string](#match-by-json)
+- [Custom matchers](#custom-matchers)
+
 ## Installation
 
 `npm install @johanblumenberg/ts-mockito --save-dev`
@@ -177,6 +182,56 @@ foo.getBar(3);
 // Using anything() is identical to using _
 verify(mockedFoo.getBar(anything())).called();
 verify(mockedFoo.getBar(_)).called();
+```
+
+### Match by JSON
+
+``` typescript
+// Creating mock
+let mockedFoo:Foo = mock(Foo);
+
+// Getting instance from mock
+let foo:Foo = instance(mockedFoo);
+
+// Using instance in source code
+foo.getBar('{"name": "John Doe", "age": 42}');
+foo.getBar('{"name": "John Smith", "age": 30}');
+
+// Match by part of JSON string
+verify(mockedFoo.getBar(jsonContaining({name: startsWith("John")}))).twice();
+verify(mockedFoo.getBar(jsonContaining({age: 42}))).once();
+```
+
+### Custom matchers
+
+Sometimes it is useful to define custom matchers, to be able to easily match on anything. This can be done by extending the `Matcher` class.
+
+```typescript
+class IsPalindromeMatcher extends Matcher {
+    public match(value: string): boolean {
+        return value === value.split("").reverse().join("");
+    }
+
+    public toString(): string {
+        return 'isPalindrome()';
+    }
+}
+
+function isPalindrome(): string {
+  return new IsPalindromeMatcher() as any;
+}
+
+// Creating mock
+let mockedFoo:Foo = mock(Foo);
+
+// Getting instance from mock
+let foo:Foo = instance(mockedFoo);
+
+// Using instance in source code
+foo.bar("racecar);
+
+// Match using the custom matcher
+verify(mockedFoo.bar(isPalindrome())).once();
 ```
 
 ## Usage
