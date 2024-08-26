@@ -186,6 +186,8 @@ verify(mockedFoo.getBar(_)).called();
 
 ### Match by JSON
 
+Matching by JSON works very similar to `objectContaining()`, to be used when the value to match is a string containing a JSON formatted object instead of just an object. This allows to partially match the JSON content.
+
 ``` typescript
 // Creating mock
 let mockedFoo:Foo = mock(Foo);
@@ -228,7 +230,7 @@ let mockedFoo:Foo = mock(Foo);
 let foo:Foo = instance(mockedFoo);
 
 // Using instance in source code
-foo.bar("racecar);
+foo.bar("racecar");
 
 // Match using the custom matcher
 verify(mockedFoo.bar(isPalindrome())).once();
