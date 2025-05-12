@@ -12,8 +12,8 @@ export class CallFunctionMethodStub<T> extends AbstractMethodStub implements Met
     private validator: ArgsToMatchersValidator = new ArgsToMatchersValidator();
     private functionResult: any;
 
-    constructor(protected groupIndex: number, private matchers: Array<Matcher>, private methodToStub: MethodToStub, private func: any) {
-        super();
+    constructor(groupIndex: number, private matchers: Array<Matcher>, private methodToStub: MethodToStub, private func: any, oneshot: boolean = false) {
+        super(groupIndex, oneshot);
     }
 
     public isApplicable(args: any[]): boolean {

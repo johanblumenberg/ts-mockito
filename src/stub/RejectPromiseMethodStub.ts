@@ -6,8 +6,8 @@ import {MethodStub} from "./MethodStub";
 export class RejectPromiseMethodStub extends AbstractMethodStub implements MethodStub {
     private validator: ArgsToMatchersValidator = new ArgsToMatchersValidator();
 
-    constructor(protected groupIndex: number, private matchers: Array<Matcher>, private value: any) {
-        super();
+    constructor(groupIndex: number, private matchers: Array<Matcher>, private value: any, oneshot: boolean = false) {
+        super(groupIndex, oneshot);
     }
 
     public isApplicable(args: any[]): boolean {

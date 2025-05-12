@@ -25,8 +25,10 @@ export class MethodStubCollection {
 
     private removeIfNotLast(groupIndex: number, args: any[]): void {
         const index = this.getFirstMatchingIndexFromGroup(groupIndex, args);
-        if (index > -1 && this.getItemsCountInGroup(groupIndex) > 1) {
-            this.items.splice(index, 1);
+        if (index > -1) {
+            if (this.items[index].isOneshot() || this.getItemsCountInGroup(groupIndex) > 1) {
+                this.items.splice(index, 1);
+            }
         }
     }
 

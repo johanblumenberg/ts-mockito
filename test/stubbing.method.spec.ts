@@ -1,4 +1,4 @@
-import {anything, imock, instance, mock, when} from "../src/ts-mockito";
+import {_, anything, imock, instance, mock, when} from "../src/ts-mockito";
 import {Foo} from "./utils/Foo";
 
 describe("mocking", () => {
@@ -23,6 +23,22 @@ describe("mocking", () => {
 
                     // then
                     expect(result).toEqual(expectedResult);
+                });
+
+                it("returns stubbed value once", () => {
+                    // given
+                    when(mockedFoo.getBar()).thenReturn("standard result");
+                    when(mockedFoo.getBar()).thenReturnOnce("once result");
+
+                    // when
+                    const result1 = foo.getBar();
+                    // then
+                    expect(result1).toEqual("once result");
+
+                    // when
+                    const result2 = foo.getBar();
+                    // then
+                    expect(result2).toEqual("standard result");
                 });
             });
 
@@ -156,6 +172,29 @@ describe("mocking", () => {
                 // then
                 expect(error.message).toEqual("sampleError");
             });
+
+            it("throws given error once", () => {
+                // given
+                const sampleError = new Error("sampleError");
+                when(mockedFoo.getBar()).thenReturn("standard result");
+                when(mockedFoo.getBar()).thenThrowOnce(sampleError);
+
+                // when
+                let error = null;
+                try {
+                    foo.getBar();
+                } catch (e) {
+                    error = e;
+                }
+
+                // then
+                expect(error.message).toEqual("sampleError");
+
+                // when
+                const result = foo.getBar();
+                // then
+                expect(result).toEqual("standard result");
+            });
         });
 
         describe("with stubbed promise resolve", () => {
@@ -173,6 +212,22 @@ describe("mocking", () => {
                         done();
                     })
                     .catch(err => done.fail(err));
+            });
+
+            it("resolves with given value once", async () => {
+                // given
+                when(mockedFoo.sampleMethodReturningPromise(_)).thenResolve("standard result");
+                when(mockedFoo.sampleMethodReturningPromise(_)).thenResolveOnce("once result");
+
+                // when
+                const result1 = await foo.sampleMethodReturningPromise("123");
+                // then
+                expect(result1).toEqual("once result");
+
+                // when
+                const result2 = await foo.sampleMethodReturningPromise("123");
+                // then
+                expect(result2).toEqual("standard result");
             });
 
             it("resolves with given value for PromiseLike", done => {
@@ -283,6 +338,31 @@ describe("mocking", () => {
                         expect(err.message).toEqual("sampleError");
                         done();
                     });
+            });
+
+            it("rejects with given error once", done => {
+                // given
+                const sampleError = new Error("sampleError");
+                when(mockedFoo.sampleMethodReturningPromise(_)).thenResolve("standard result");
+                when(mockedFoo.sampleMethodReturningPromise(_)).thenRejectOnce(sampleError);
+
+                // when
+                foo.sampleMethodReturningPromise("abc")
+                    .then(value => done.fail())
+                    .catch(err => {
+                        // then
+                        expect(err.message).toEqual("sampleError");
+                        done();
+                    });
+
+                // when
+                foo.sampleMethodReturningPromise("abc")
+                    .then(value => {
+                        // then
+                        expect(value).toEqual("standard result");
+                        done();
+                    })
+                    .catch(err => done.fail(err));
             });
 
             it("rejects with given value for PromiseLike", done => {

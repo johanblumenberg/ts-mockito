@@ -6,6 +6,10 @@ export class CallThroughMethodStub implements MethodStub {
     constructor(private instance: any, private method: Function) {
     }
 
+    public isOneshot(): boolean {
+        return false;
+    }
+
     public getGroupIndex(): number {
         return -1;
     }
