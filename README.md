@@ -46,6 +46,10 @@ Fork of [ts-mockito](https://github.com/NagRock/ts-mockito), which will be kept 
 - [Match by JSON string](#match-by-json)
 - [Custom matchers](#custom-matchers)
 
+### 1.0.46
+
+- [Match Once](#match-once)
+
 ## Installation
 
 `npm install @johanblumenberg/ts-mockito --save-dev`
@@ -234,6 +238,33 @@ foo.bar("racecar");
 
 // Match using the custom matcher
 verify(mockedFoo.bar(isPalindrome())).once();
+```
+
+### Match Once
+
+Matchers that match only once, such as `thenReturnOnce()`, `thenThrowOnce()`, `thenResolveOnce()`, `thenRejectOnce()`. These matchers will only match once, and are useful for matching once and then falling back to standard behaviour.
+
+```typescript
+beforeEach(() => {
+    when(fetch(_)).thenResolve({ status: 200 });
+});
+
+it("getData() should be able to fetch data", async () => {
+    const result = await getData("https://example.com/data");
+    expect(result.status).toEqual(200);
+    verify(fetch(_)).once();
+});
+
+it("getData() should retry on 500 errors", async () => {
+    // Will override the setup in beforeEach() and return a 500 response once
+    // and then it will fallback to the behaviour specified in beforeEach()
+    // in the next invocation
+    when(fetch(_)).thenResolveOnce({ status: 500 });
+
+    const result = await getData("https://example.com/data");
+    expect(result.status).toEqual(200);
+    verify(fetch(_)).twice();
+});
 ```
 
 ## Usage
