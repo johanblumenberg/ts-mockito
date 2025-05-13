@@ -220,7 +220,7 @@ type RecursivePartial<T> = {
       T[P];
 };
 
-export function arrayContaining<T>(expectedValue: T): string {
+export function arrayContaining<T>(expectedValue: T): T[] {
     return new ArrayContainingMatcher(expectedValue) as any;
 }
   
