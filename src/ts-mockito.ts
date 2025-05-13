@@ -12,7 +12,8 @@ import {IsBeforeMatcher} from "./matcher/type/date/IsBeforeMatcher";
 import {IsBeforeOrEqualMatcher} from "./matcher/type/date/IsBeforeOrEqualMatcher";
 import {DeepEqualMatcher} from "./matcher/type/DeepEqualMatcher";
 import {EndsWithMatcher} from "./matcher/type/EndsWithMatcher";
-import { JsonContainingMatcher } from "./matcher/type/JsonContainingMatcher";
+import {JsonContainingMatcher} from "./matcher/type/JsonContainingMatcher";
+import {ArrayContainingMatcher} from "./matcher/type/ArrayContainingMatcher";
 import {MatchingStringMatcher} from "./matcher/type/MatchingStringMatcher";
 import {NotNullMatcher} from "./matcher/type/NotNullMatcher";
 import {GreaterThanMatcher} from "./matcher/type/number/GreaterThanMatcher";
@@ -219,6 +220,10 @@ type RecursivePartial<T> = {
       T[P];
 };
 
+export function arrayContaining<T>(expectedValue: T): string {
+    return new ArrayContainingMatcher(expectedValue) as any;
+}
+  
 export function objectContaining<T>(expectedValue: RecursivePartial<T extends true ? T : T>): T {
     return new ObjectContainingMatcher(expectedValue) as any;
 }
@@ -307,6 +312,7 @@ export default {
     match,
     startsWith,
     endsWith,
+    arrayContaining,
     objectContaining,
     jsonContaining,
     MockPropertyPolicy,

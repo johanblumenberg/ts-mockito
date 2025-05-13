@@ -1,5 +1,5 @@
 import {Matcher} from "../../../src/matcher/type/Matcher";
-import {jsonContaining, objectContaining, startsWith} from "../../../src/ts-mockito";
+import {jsonContaining, startsWith} from "../../../src/ts-mockito";
 
 describe("JsonContainingMatcher", () => {
     describe("checking if source object contains given object", () => {
