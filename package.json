@@ -1,6 +1,6 @@
 {
   "name": "@johanblumenberg/ts-mockito",
-  "version": "1.0.48",
+  "version": "1.0.49",
   "description": "Mocking library for TypeScript",
   "main": "lib/ts-mockito.js",
   "typings": "lib/ts-mockito",
