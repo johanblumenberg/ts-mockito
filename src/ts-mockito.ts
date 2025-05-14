@@ -16,6 +16,7 @@ import {JsonContainingMatcher} from "./matcher/type/JsonContainingMatcher";
 import {ArrayContainingMatcher} from "./matcher/type/ArrayContainingMatcher";
 import {MatchingStringMatcher} from "./matcher/type/MatchingStringMatcher";
 import {NotNullMatcher} from "./matcher/type/NotNullMatcher";
+import {NotMatcher} from "./matcher/type/NotMatcher";
 import {GreaterThanMatcher} from "./matcher/type/number/GreaterThanMatcher";
 import {GreaterThanOrEqualMatcher} from "./matcher/type/number/GreaterThanOrEqualMatcher";
 import {LowerThanMatcher} from "./matcher/type/number/LowerThanMatcher";
@@ -185,6 +186,14 @@ export function anything(): any {
 
 export const _ = anything();
 
+export function not<T>(expectedValue: T): T {
+    if (expectedValue instanceof Matcher) {
+        return new NotMatcher(expectedValue as Matcher) as any;
+    } else {
+        throw new Error('Matching using not() expects a matcher, for example not(deepEqual("hi"))');
+    }
+}
+
 export function between(min: number, max: number): number {
     return new BetweenMatcher(min, max) as any;
 }
@@ -307,6 +316,7 @@ export default {
     _,
     between,
     deepEqual,
+    not,
     notNull,
     strictEqual,
     match,
