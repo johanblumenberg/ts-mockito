@@ -35,7 +35,7 @@ Fork of [ts-mockito](https://github.com/NagRock/ts-mockito), which will be kept 
 
 ### 1.0.41
 
-- [Proceed to call original method](#proceed-to-call-original-method)
+- [Proceed to call original method](#proceed-to-call-the-original-method)
 
 ### 1.0.42
 
@@ -69,7 +69,7 @@ await verify(mockedFoo.getBar(3)).timeout(1000);
 
 ### Mocking interfaces
 
-Mocking interfaxces works just the same as mocking classes, except you
+Mocking interfaces works just the same as mocking classes, except you
 must use the `imock()` function to create the mock.
 
 ```typescript
@@ -84,9 +84,9 @@ let mockedFoo:Foo = imock(MockPropertyPolicy.StubAsProperty);
 when(mockedFoo.bar).thenReturn('five');
 ```
 
-For interface mocks, you can set the defauklt behviour for mocked properties that
-have no expectations set. They can behave eiter as a property, returning null, or
-as a function, returning a function that returns null, or throw an exception.
+For interface mocks, you can set the default behaviour for mocked properties that
+have no expectations set.
+They can behave either as a property, returning null, or as a function, returning a function that returns null, or throw an exception.
 
 ```typescript
 let mockedFoo1:Foo = imock(MockPropertyPolicy.Throw);
@@ -105,7 +105,9 @@ instance(mockedFoo4).getBar(5); // This returns null, because no expectation is 
 
 ### Mocking free functions
 
-Sometimes you need to mock a function, not an object, for example to pass as a callback somewhere. This can be done using `fnmock()`. It works just like any other mock, except it's a function, not an object.
+Sometimes you need to mock a function, not an object, for example to pass as a callback somewhere.
+This can be done using `fnmock()`.
+It works just like any other mock, except it's a function, not an object.
 
 ```typescript
 let fn: (a: number, b: string) => number = fnmock();
@@ -117,7 +119,7 @@ verify(fn(10, 'hello')).called();
 
 ### Mocking constructors
 
-Sometimes you need to mock a constructor, and control creation of new objects.
+Sometimes you need to mock a constructor and control creation of new objects.
 
 ```typescript
 let mockedFooCtor: new () => Foo = cmock();
@@ -132,7 +134,9 @@ expect(result).toBe(instance(mockedFoo));
 
 ### Defer resolving promises
 
-The actions `.thenResolve()` and `.thenReject()` are returning promises that are already resolved or rejected. Sometimes you want to control the order or timing of when promises are resolved. In that case it is useful to return a deferred promise, and resolve it from the test code, when appropriate.
+The actions `.thenResolve()` and `.thenReject()` are returning promises that are already resolved or rejected.
+Sometimes you want to control the order or timing of when promises are resolved.
+In that case it is useful to return a deferred promise and resolve it from the test code, when appropriate.
 
 ```typescript
 let d = defer<number>();
@@ -144,7 +148,7 @@ d.resolve(1); // Later, the promise is resolved or rejected
 
 ### Mock `React` props with `enzyme`
 
-It's possible to mock props for react components when testing using enzyme.
+It's possible to mock props for React components when testing using enzyme.
 
 ```typescript
 let props: Props = imock(MockPropertyPolicy.StubAsProperty);
@@ -190,7 +194,8 @@ verify(mockedFoo.getBar(_)).called();
 
 ### Match by JSON
 
-Matching by JSON works very similar to `objectContaining()`, to be used when the value to match is a string containing a JSON formatted object instead of just an object. This allows to partially match the JSON content.
+Matching by JSON works very similar to `objectContaining()`, to be used when the value to match is a string containing a JSON formatted object instead of just an object.
+This allows partially matching the JSON content.
 
 ``` typescript
 // Creating mock
@@ -210,7 +215,8 @@ verify(mockedFoo.getBar(jsonContaining({age: 42}))).once();
 
 ### Custom matchers
 
-Sometimes it is useful to define custom matchers, to be able to easily match on anything. This can be done by extending the `Matcher` class.
+Sometimes it is useful to define custom matchers, to be able to easily match on anything.
+This can be done by extending the `Matcher` class.
 
 ```typescript
 class IsPalindromeMatcher extends Matcher {
@@ -242,7 +248,8 @@ verify(mockedFoo.bar(isPalindrome())).once();
 
 ### Match Once
 
-Matchers that match only once, such as `thenReturnOnce()`, `thenThrowOnce()`, `thenResolveOnce()`, `thenRejectOnce()`. These matchers will only match once, and are useful for matching once and then falling back to standard behaviour.
+Matchers which match only once, such as `thenReturnOnce()`, `thenThrowOnce()`, `thenResolveOnce()`, `thenRejectOnce()`.
+These matchers will only match once and are useful for matching once and then falling back to standard behaviour.
 
 ```typescript
 beforeEach(() => {
@@ -325,7 +332,7 @@ console.log(foo.sampleGetter);
 
 Syntax is the same as with getter values.
 
-Please note, that stubbing properties that don't have getters only works if [Proxy](http://www.ecma-international.org/ecma-262/6.0/#sec-proxy-objects) object is available (ES6).
+Please note that stubbing properties that don't have getters only works if the [Proxy](http://www.ecma-international.org/ecma-262/6.0/#sec-proxy-objects) object is available (ES6).
 
 ### Call count verification
 
@@ -390,7 +397,7 @@ try {
 
 ### Custom function
 
-You can also stub method with your own implementation
+You can also stub a method with your own implementation
 
 ``` typescript
 let mockedFoo:Foo = mock(Foo);
@@ -406,7 +413,7 @@ console.log(foo.sumTwoNumbers(5, 10));
 
 ### Resolving / rejecting promises
 
-You can also stub method to resolve / reject promise
+You can also stub a method to resolve / reject promises
 
 ``` typescript
 let mockedFoo:Foo = mock(Foo);
@@ -440,7 +447,7 @@ verify(mockedFoo.getBar(1)).never();      // has never been called after reset
 
 ### Resetting mock stubs
 
-Or reset mock call counter with all stubs
+Or reset the mock call counter with all stubs
 
 ``` typescript
 // Creating mock
@@ -463,7 +470,8 @@ console.log(foo.getBar(1));               // null - previously added stub has be
 
 ### Resetting mocks
 
-Resetting a mock will reset both call count and stub calls. For a spy it will also reset the original object, removing the spy.
+Resetting a mock will reset both call count and stub calls.
+For a spy it will also reset the original object, removing the spy.
 
 ``` typescript
 // Creating mock
@@ -525,7 +533,7 @@ console.log(secondArg);   // prints 9
 
 ### Recording multiple behaviors
 
-You can set multiple returning values for same matching values
+You can set multiple returning values for the same matching values
 
 ``` typescript
 const mockedFoo:Foo = mock(Foo);
@@ -597,7 +605,7 @@ const mockedFoo: SampleAbstractClass = mock(SampleAbstractClass);
 const foo: SampleAbstractClass = instance(mockedFoo);
 ```
 
-You can also mock generic classes, but note that generic type is just needed by mock type definition
+You can also mock generic classes, but note that a generic type is just needed by the mock type definition
 
 ``` typescript
 const mockedFoo: SampleGeneric<SampleInterface> = mock(SampleGeneric);
@@ -633,7 +641,7 @@ console.log(capture(spiedFoo.bar).last()); // [42]
 ### Log mock invocations
 
 Sometimes it is useful to be able to see all invocations on a mocked object,
-for example if you are testing a component which you are not sure exactly
+for example, if you are testing a component which you are not sure exactly
 how it works.
 
 ``` typescript
@@ -645,9 +653,10 @@ foo.bar("hello world");
 //   call: bar("hello world")
 ```
 
-### Proceed to call original method
+### Proceed to call the original method
 
-Sometimes it is useful to invoke the original method on a spy and change the return value. Mocking the method using `when(object.method()).thenReturn(newValue)` can be done, but this will not invoke the original method, and it will not be possible to use the original return value and modify it before it is returned.
+Sometimes it is useful to invoke the original method on a spy and change the return value.
+Mocking the method using `when(object.method()).thenReturn(newValue)` can be done, but this will not invoke the original method, and it will not be possible to use the original return value and modify it before it is returned.
 
 This can be accomplished using `thenCall()` and invoke the original method.
 
@@ -666,8 +675,8 @@ when(spiedFoo.method(_, _)).thenCall(function (arg1, arg2) {
 
 ### Thanks
 
-* Szczepan Faber (https://www.linkedin.com/in/szczepiq) 
-* Sebastian Konkol (https://www.linkedin.com/in/sebastiankonkol) 
+* Szczepan Faber (https://www.linkedin.com/in/szczepiq)
+* Sebastian Konkol (https://www.linkedin.com/in/sebastiankonkol)
 * Clickmeeting (http://clickmeeting.com)
 * Michał Stocki (https://github.com/michalstocki)
 * Łukasz Bendykowski (https://github.com/viman)
