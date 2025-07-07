@@ -9,7 +9,7 @@ export class DeepEqualMatcher extends Matcher {
     public match(value: any): boolean {
         return _.isEqualWith(this.expectedValue, value,
             (expected: any, actual: any): boolean => {
-                if (expected instanceof Matcher) {
+                if (Matcher.is(expected)) {
                     return expected.match(actual);
                 }
 

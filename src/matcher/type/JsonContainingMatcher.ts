@@ -8,7 +8,7 @@ export class JsonContainingMatcher extends Matcher {
 
     public match(value: string): boolean {
         return _.isMatchWith(JSON.parse(value), this.expectedValue, (objValue, srcValue) => {
-          if (srcValue instanceof Matcher) {
+          if (Matcher.is(srcValue)) {
             return srcValue.match(objValue);
           } else {
             return undefined;

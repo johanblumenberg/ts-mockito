@@ -234,7 +234,7 @@ export class Mocker {
                         get: () => this.createActionListener(key),
                     });
                 }
-                methodToMock.matchers = args.map(arg => (arg instanceof Matcher) ? arg : strictEqual(arg));
+                methodToMock.matchers = args.map(arg => Matcher.is(arg) ? arg : strictEqual(arg));
                 return methodToMock;
             };
 
@@ -274,7 +274,7 @@ export class Mocker {
             const matchers: Matcher[] = [];
 
             for (const arg of args) {
-                if (!(arg instanceof Matcher)) {
+                if (!Matcher.is(arg)) {
                     matchers.push(strictEqual(arg));
                 } else {
                     matchers.push(arg);

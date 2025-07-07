@@ -10,7 +10,7 @@ export class StrictEqualMatcher extends Matcher {
     }
 
     public toString(): string {
-        if (this.expectedValue instanceof Array) {
+        if (Array.isArray(this.expectedValue)) {
             return `strictEqual([${this.expectedValue}])`;
         } else {
             return `strictEqual(${this.expectedValue})`;

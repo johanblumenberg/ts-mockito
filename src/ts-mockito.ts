@@ -187,7 +187,7 @@ export function anything(): any {
 export const _ = anything();
 
 export function not<T>(expectedValue: T): T {
-    if (expectedValue instanceof Matcher) {
+    if (Matcher.is(expectedValue)) {
         return new NotMatcher(expectedValue as Matcher) as any;
     } else {
         throw new Error('Matching using not() expects a matcher, for example not(deepEqual("hi"))');
