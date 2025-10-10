@@ -103,6 +103,14 @@ describe("capture by matching", () => {
         expect(result[1]).toBe(1);
     });
 
+    it('should capture on number arguments', () => {
+        foo.concatStringWithNumber("first", 1);
+
+        const result = capture(mockedFoo.concatStringWithNumber, [_, 1]).last();
+        expect(result[0]).toBe("first");
+        expect(result[1]).toBe(1);
+    });
+
     it('should capture arguments with non-matching calls', () => {
         foo.concatStringWithNumber("first", 1);
         foo.concatStringWithNumber("second", 2);

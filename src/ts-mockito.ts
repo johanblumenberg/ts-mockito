@@ -142,7 +142,9 @@ export function capture(method: (...args: any[]) => any, matchers?: any[]): ArgC
         methodStub.watcher.invoked();
 
         const actions = matchers ?
-          methodStub.mocker.getAllMatchingActions(methodStub.methodName, matchers) :
+          methodStub.mocker.getAllMatchingActions(methodStub.methodName, matchers.map(
+            arg => Matcher.is(arg) ? arg : strictEqual(arg),
+          )) :
           methodStub.mocker.getActionsByName(methodStub.methodName);
         return new ArgCaptor(actions);
     } else {
